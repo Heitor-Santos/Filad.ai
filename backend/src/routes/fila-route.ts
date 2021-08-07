@@ -3,7 +3,7 @@ import { entrarNaFila, sairDaFila, tamanhoDaFila } from '../controllers/fila-con
 
 const routes: Router = Router();
 
-routes.get('/entrar', entrarNaFila)
+routes.post('/entrar', entrarNaFila)
 routes.get('/sair', sairDaFila)
 routes.get('/tamanho', tamanhoDaFila)
 

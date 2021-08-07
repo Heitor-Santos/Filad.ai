@@ -7,7 +7,7 @@ function entrarNaFila(req: Request, res: Response) {
         idade: req.body.idade,
         sexo: req.body.sexo,
         telegram_id: req.body.telegram_id,
-        entrou_na_fila_em: new Date(),
+        entrou_na_fila_em: new Date(req.body.date),
         saiu_da_fila_em: null,
     }
     if (fila.find(client => client.telegram_id == user.telegram_id)) {
