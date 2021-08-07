@@ -1,5 +1,5 @@
 import {Client} from './fila-repo';
 
-const atendimentos:Client[] = [
+export const atendimentos:Client[] = [
 
 ]
