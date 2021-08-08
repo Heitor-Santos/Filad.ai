@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Client } from '../repositories/fila-repo';
-import { entrarNaFila } from '../controllers/fila-control';
+import { entrarNaFila, getPrevisaoUser } from '../controllers/fila-control';
 
 export interface BotUpdate {
   update_id: number,
@@ -79,6 +79,14 @@ const queryResult = async (chatbot: Chatbot, query: BotUpdate) => {
         msg = "Erro ao entrar na fila. Por favor, tente novamente.";
     }
 
+    const sendMessageResult = await sendMessageTo(chatbot, chat_id, msg);
+  }else if (text.includes('status')){
+    const result: any = getPrevisaoUser(""+chat_id);
+    let msg = `Sua posicao atual e: ${result.posicao} e a previsao de espera e de ${result.previsao} minutos.`;
+    if (result.error) {
+      if (result.error == 'user_not_found')
+        msg = 'Voce nao esta em nenhuma fila. Envie "start" para entrar.';
+    }
     const sendMessageResult = await sendMessageTo(chatbot, chat_id, msg);
   }
 }
