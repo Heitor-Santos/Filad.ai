@@ -18,11 +18,14 @@ var chatbot: Chatbot = {
     offset: 0
 }
 
-getUpdates(chatbot).then((res) => {
-    const offset = res.offset;
-    console.log("New offset: ", offset);
-    chatbot.offset = offset;
-});
+const fetchUpdateDelayInSeconds = 10;
+setInterval(() => {
+    getUpdates(chatbot).then((res) => {
+        const offset = res.offset;
+        chatbot.offset = offset;
+    });
+}, fetchUpdateDelayInSeconds * 1000);
+
 
 app.listen(port, () => {
     console.log(`Servidor ouvindo na porta ${port}`)

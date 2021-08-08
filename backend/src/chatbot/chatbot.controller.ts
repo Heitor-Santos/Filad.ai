@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { Client } from '../repositories/fila-repo';
+import { entrarNaFila } from '../controllers/fila-control';
 
 export interface BotUpdate {
   update_id: number,
@@ -39,7 +41,8 @@ const getUpdates = async (chatbot: Chatbot) => {
   }
 
   const updates: BotUpdate[] = resultado.data.result;
-  console.log({ updates });
+  if (updates.length)
+    console.log("New messages: ", updates.length);
   for (let update of updates) {
     chatbot.offset = update.update_id;
     await queryResult(chatbot, update);
@@ -50,7 +53,6 @@ const getUpdates = async (chatbot: Chatbot) => {
 
 const sendMessageTo = async (chatbot: Chatbot, chat_id: number, text: string) => {
   const requestUrl = `https://api.telegram.org/bot${chatbot.token_id}/sendMessage?chat_id=${chat_id}&text=${text}`;
-  console.log(requestUrl);
   return axios.get(requestUrl);
 }
 
@@ -59,20 +61,25 @@ const queryResult = async (chatbot: Chatbot, query: BotUpdate) => {
   const name = query.message.chat.first_name + query.message.chat.last_name;
   const chat_id = query.message.chat.id;
   if (text.includes('start') || text.includes('Entrar na fila')) {
-    const result = await axios.post('http://localhost:3333/api/fila/entrar', {
+    const user: Client = {
       nome: name,
       idade: 0,
       sexo: 'O',
-      telegram_id: chat_id,
-      date: query.message.date
-    });
-    console.log("Entrar na fila result: ", result.data);
-    let msg = 'Entrou na fila com sucesso.';
-    if (result.data.error) {
-      msg = "Esse usuario ja esta na fila.";
+      telegram_id: "" + chat_id,
+      entrou_na_fila_em: new Date(query.message.date),
+      saiu_da_fila_em: null,
     }
+    const result: any = entrarNaFila(user);
+    let msg = `Voce entrou na fila. Sua posicao atual e: ${result.posicao} e a previsao de espera e de ${result.previsao} minutos.`;
+
+    if (result.error) {
+      if (result.error == 'user_already_in_queue')
+        msg = "Esse usuario ja esta na fila.";
+      else if (result.error == 'user_not_found')
+        msg = "Erro ao entrar na fila. Por favor, tente novamente.";
+    }
+
     const sendMessageResult = await sendMessageTo(chatbot, chat_id, msg);
-    console.log(sendMessageResult.data);
   }
 }
 
