@@ -34,6 +34,30 @@ export const atendimentos:Client[] = [
         saiu_da_fila_em: new Date("2021/07/15 14:10:35"),
     },
     {
+        telegram_id: '@FernandinhaDoGera',
+        nome: 'Fernanda',
+        sexo: 'F',
+        idade: 33,
+        entrou_na_fila_em: new Date("2021/07/16 13:26:30"),
+        saiu_da_fila_em: new Date("2021/07/16 15:18:25"),
+        // feedback:{
+        //     positivo: true,
+        //     descricao: "Gostei! Adoro essas modernindades"
+        // }
+    },
+    {
+        telegram_id: '@Josefa123',
+        nome: 'Josefa',
+        sexo: 'F',
+        idade: 33,
+        entrou_na_fila_em: new Date("2021/07/16 13:06:30"),
+        saiu_da_fila_em: new Date("2021/07/16 15:08:25"),
+        // feedback:{
+        //     positivo: true,
+        //     descricao: "Gostei! Adoro essas modernindades"
+        // }
+    },
+    {
         telegram_id: '@Rodrigo51',
         nome: 'Rodrigo',
         sexo: 'M',
