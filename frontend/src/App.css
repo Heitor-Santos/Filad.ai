@@ -12,6 +12,11 @@ p{
 .tipo{
   font-family: 'Montserrat', sans-serif;
 }
+
+#hist-top{
+  font-family: 'Montserrat', sans-serif;
+}
+
 #head{
   background-color: white;
   padding-bottom: 2%;

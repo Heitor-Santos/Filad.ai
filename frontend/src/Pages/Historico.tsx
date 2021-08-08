@@ -1,4 +1,4 @@
-import { makeStyles, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from '@material-ui/core';
+import { FormControl, makeStyles, MenuItem, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from '@material-ui/core';
 import React, { useState } from 'react';
 
 function Histórico() {
@@ -12,26 +12,26 @@ function Histórico() {
     }
 
     interface Data { 
-        name: string;
-        age: string;
-        sex: string;
-        feedback: string;
-        telegram: string;
-        visit: string;
+        name: any;
+        age: any;
+        sex: any;
+        feedback: any;
+        telegram: any;
+        visit: any;
     }
 
     //const [rows, setRows] = useState<Array<>>([]);
     const columns: Column[] = [
         { id: 'name', label: 'Nome', minWidth: 170 },
-        { id: 'age', label: 'Idade', minWidth: 100},
-        { id: 'sex', label: 'Sexo', minWidth: 100, align: 'center'},
-        { id: 'feedback', label: 'Feedback', minWidth: 100, align: 'center'},
-        { id: 'telegram', label: 'Telegram', minWidth: 100, align: 'center'},
-        { id: 'visit', label: 'Data', minWidth:170, align: 'right'}
+        { id: 'age', label: 'Idade', minWidth: 100, align: 'center' },
+        { id: 'sex', label: 'Sexo', minWidth: 100, align: 'center' },
+        { id: 'feedback', label: 'Feedback', minWidth: 100, align: 'center' },
+        { id: 'telegram', label: 'Telegram', minWidth: 100, align: 'center' },
+        { id: 'visit', label: 'Data', minWidth: 100, align: 'center' }
     ];
 
-    function createData(name: string, age: string, sex: string, feedback: string, telegram:string, visit:string): Data {
-        return { name, age, sex, feedback, telegram, visit};
+    function createData(name: any, age: any, sex: any, feedback: any, telegram:any, visit:any): Data {
+        return { name, age, sex, feedback, telegram, visit };
       }
       
       const rows = [
@@ -57,13 +57,14 @@ function Histórico() {
             width: '100%',
         },
         container: {
-            maxHeight: 440,
+            maxHeight: 600,
         },
     });
 
     const classes = useStyles();
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [periodo, setPeriodo] = useState("Hoje");
 
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
@@ -74,13 +75,35 @@ function Histórico() {
         setPage(0);
     };
 
+    const labelRows = (page: number, rowsPerPage:number, length:number) => {
+        return `${page * rowsPerPage + 1}-${page * rowsPerPage + rowsPerPage} de ${length}`
+    }
+
     return (
-        <div>
-            <p>
-                <Typography variant= "h3" gutterBottom> 
-                Histórico 
-                </Typography>
-            </p>
+        <div style ={{marginLeft: "2%"}}>
+            <div style ={{ display: 'flex', justifyContent: 'space-between' }}>
+                <h2 id="hist-top">
+                    Histórico
+                </h2>
+                <div style={{ display: 'flex', alignItems: "center" }}>
+                    <h2 id="hist-top">Período</h2>
+                    <FormControl style={{ marginLeft: "20px"}}>
+                        <Select 
+                            value={periodo}
+                            onChange={(e: any) => setPeriodo(e.target.value)}
+                            displayEmpty
+                            style={{ width: '150px', textAlign: 'center' }}
+                        >
+                            <MenuItem value={"Hoje"}>Hoje</MenuItem>
+                            <MenuItem value={"Semana"}>Semana</MenuItem>
+                            <MenuItem value={"Mês"}>Mês</MenuItem>
+                            <MenuItem value={"Ano"}>Ano</MenuItem>
+                        </Select>
+                    </FormControl>
+                </div>
+            </div>
+            
+            {/* Tabela */}
             <Paper className={classes.root}>
                 <TableContainer className={classes.container}>
                     <Table stickyHeader aria-label="sticky table">
@@ -116,6 +139,8 @@ function Histórico() {
                     </Table>
                 </TableContainer>
                 <TablePagination 
+                labelRowsPerPage='Linhas por página:'
+                labelDisplayedRows={() => labelRows(page, rowsPerPage, rows.length)}
                 rowsPerPageOptions={[10,25,100]}
                 component="div"
                 count={rows.length}
