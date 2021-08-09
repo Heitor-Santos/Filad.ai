@@ -30,16 +30,16 @@ export const atendimentos:Client[] = [
         nome: 'André',
         sexo: 'M',
         idade: 22,
-        entrou_na_fila_em: new Date("2021/07/15 12:06:30"),
-        saiu_da_fila_em: new Date("2021/07/15 14:10:35"),
+        entrou_na_fila_em: new Date("2021/08/08 12:06:30"),
+        saiu_da_fila_em: new Date("2021/08/08 14:10:35"),
     },
     {
         telegram_id: '@FernandinhaDoGera',
         nome: 'Fernanda',
         sexo: 'F',
         idade: 33,
-        entrou_na_fila_em: new Date("2021/07/16 13:26:30"),
-        saiu_da_fila_em: new Date("2021/07/16 15:18:25"),
+        entrou_na_fila_em: new Date("2021/08/08 13:26:30"),
+        saiu_da_fila_em: new Date("2021/08/08 15:18:25"),
         // feedback:{
         //     positivo: true,
         //     descricao: "Gostei! Adoro essas modernindades"
@@ -62,8 +62,8 @@ export const atendimentos:Client[] = [
         nome: 'Rodrigo',
         sexo: 'M',
         idade: 52,
-        entrou_na_fila_em: new Date("2021/07/15 12:15:30"),
-        saiu_da_fila_em: new Date("2021/07/15 14:11:55"),
+        entrou_na_fila_em: new Date("2021/08/08 12:15:30"),
+        saiu_da_fila_em: new Date("2021/08/08 14:11:55"),
         feedback:{
             positivo: false,
             descricao: "Não achei que fez muita diferença!"
@@ -74,8 +74,8 @@ export const atendimentos:Client[] = [
         nome: 'Maria',
         sexo: 'F',
         idade: 43,
-        entrou_na_fila_em: new Date("2021/07/15 12:17:30"),
-        saiu_da_fila_em: new Date("2021/07/15 14:14:25"),
+        entrou_na_fila_em: new Date("2021/08/08 16:17:30"),
+        saiu_da_fila_em: new Date("2021/08/08 17:14:25"),
         feedback:{
             positivo: true,
             descricao: "Gostei! Adoro essas modernindades"
@@ -86,8 +86,8 @@ export const atendimentos:Client[] = [
         nome: 'Fernanda',
         sexo: 'F',
         idade: 33,
-        entrou_na_fila_em: new Date("2021/07/15 12:16:30"),
-        saiu_da_fila_em: new Date("2021/07/15 14:18:25"),
+        entrou_na_fila_em: new Date("2021/08/08 12:16:30"),
+        saiu_da_fila_em: new Date("2021/08/08 14:18:25"),
         // feedback:{
         //     positivo: true,
         //     descricao: "Gostei! Adoro essas modernindades"
@@ -98,12 +98,12 @@ export const atendimentos:Client[] = [
         nome: 'Jurema',
         sexo: 'F',
         idade: 23,
-        entrou_na_fila_em: new Date("2021/07/15 12:20:30"),
-        saiu_da_fila_em: new Date("2021/07/15 14:23:25"),
+        entrou_na_fila_em: new Date("2021/08/08 10:20:30"),
+        saiu_da_fila_em: new Date("2021/08/08 13:23:25"),
         // feedback:{
         //     positivo: true,
         //     descricao: "Gostei! Adoro essas modernindades"
         // }
-    },
+    }
 ]
 
