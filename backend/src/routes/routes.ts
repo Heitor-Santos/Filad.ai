@@ -1,8 +1,8 @@
 import { Router } from 'express';
+import filaRoute from './fila-route';
 
 const routes: Router = Router();
 
-routes.get('/teste',(req,res)=>{
-    res.send({"Resposta":"Tudo OK"})
-});
+routes.use('/fila', filaRoute)
+
 export default routes
