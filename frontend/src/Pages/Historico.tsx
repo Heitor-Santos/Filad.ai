@@ -1,26 +1,52 @@
-import { FormControl, makeStyles, MenuItem, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from '@material-ui/core';
-import React, { useState } from 'react';
+import { Button, createStyles, Dialog, DialogActions, DialogContent, DialogContentText, DialogProps, DialogTitle, FormControl, makeStyles, MenuItem, Modal, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Theme } from '@material-ui/core';
+import React, { useEffect, useRef, useState } from 'react';
+import TelegramIcon from '@material-ui/icons/Telegram';
+import FeedbackIcon from '@material-ui/icons/Feedback';
+
+interface Column {
+    id: 'name' | 'age' | 'sex' | 'feedback' | 'telegram' | 'visit';
+    label: string;
+    minWidth?: number;
+    align?: 'right' | 'center';
+    format?: (value: number) => string;
+}
+
+interface Rows { 
+    name: string;
+    age: number;
+    sex: any;
+    feedback: any;
+    telegram: any;
+    visit: any;
+}
 
 function Histórico() {
+    const [rows, setRows] = useState<Array<Rows>>([])
+    useEffect(() => {
+        //const req = axios.get()
+        //const rowsTest = req.rows.map(user=>createRows(user.name,user.idade,user.sexo,'Botão Telegram', "Botão feedback", user.data))
 
-    interface Column {
-        id: 'name' | 'age' | 'sex' | 'feedback' | 'telegram' | 'visit';
-        label: string;
-        minWidth?: number;
-        align?: 'right' | 'center';
-        format?: (value: number) => string;
-    }
 
-    interface Data { 
-        name: any;
-        age: any;
-        sex: any;
-        feedback: any;
-        telegram: any;
-        visit: any;
-    }
+        const rowsTest = [
+            createRows('Andre Vasconcelos', 21, 'M', 'Botão Feedback', 'Botão Telegram', '21/07/2021'),
+            createRows('Andre Vasconcelos', 21, 'M', 'Botão Feedback', 'Botão Telegram', '21/07/2021'),
+            createRows('Andre Vasconcelos', 21, 'M', 'Botão Feedback', 'Botão Telegram', '21/07/2021'),
+            createRows('Andre Vasconcelos', 21, 'M', 'Botão Feedback', 'Botão Telegram', '21/07/2021'),
+            createRows('Andre Vasconcelos', 21, 'M', 'Botão Feedback', 'Botão Telegram', '21/07/2021'),
+            createRows('Andre Vasconcelos', 21, 'M', 'Botão Feedback', 'Botão Telegram', '21/07/2021'),
+            createRows('Andre Vasconcelos', 21, 'M', 'Botão Feedback', 'Botão Telegram', '21/07/2021'),
+            createRows('Andre Vasconcelos', 21, 'M', 'Botão Feedback', 'Botão Telegram', '21/07/2021'),
+            createRows('Andre Vasconcelos', 21, 'M', 'Botão Feedback', 'Botão Telegram', '21/07/2021'),
+            createRows('Andre Vasconcelos', 21, 'M', 'Botão Feedback', 'Botão Telegram', '21/07/2021'),
+            createRows('Andre Vasconcelos', 21, 'M', 'Botão Feedback', 'Botão Telegram', '21/07/2021'),
+            createRows('Andre Vasconcelos', 21, 'M', 'Botão Feedback', 'Botão Telegram', '21/07/2021'),
+            createRows('Andre Vasconcelos', 21, 'M', 'Botão Feedback', 'Botão Telegram', '21/07/2021'),
+            createRows('Andre Vasconcelos', 21, 'M', 'Botão Feedback', 'Botão Telegram', '21/07/2021'),
+            createRows('Andre Vasconcelos', 21, 'M', 'Botão Feedback', 'Botão Telegram', '21/07/2021'),
+        ]
+        setRows(rowsTest)
+    }, [])
 
-    //const [rows, setRows] = useState<Array<>>([]);
     const columns: Column[] = [
         { id: 'name', label: 'Nome', minWidth: 170 },
         { id: 'age', label: 'Idade', minWidth: 100, align: 'center' },
@@ -30,27 +56,9 @@ function Histórico() {
         { id: 'visit', label: 'Data', minWidth: 100, align: 'center' }
     ];
 
-    function createData(name: any, age: any, sex: any, feedback: any, telegram:any, visit:any): Data {
+    function createRows(name: string, age: number, sex: string, feedback: any, telegram:any, visit:any): Rows {
         return { name, age, sex, feedback, telegram, visit };
       }
-      
-      const rows = [
-        createData('Andre Vasconcelos', '21', 'M', 'Botão', 'Botão', '21/07/2021'),
-        createData('Andre Vasconcelos', '21', 'M', 'Botão', 'Botão', '21/07/2021'),
-        createData('Andre Vasconcelos', '21', 'M', 'Botão', 'Botão', '21/07/2021'),
-        createData('Andre Vasconcelos', '21', 'M', 'Botão', 'Botão', '21/07/2021'),
-        createData('Andre Vasconcelos', '21', 'M', 'Botão', 'Botão', '21/07/2021'),
-        createData('Andre Vasconcelos', '21', 'M', 'Botão', 'Botão', '21/07/2021'),
-        createData('Andre Vasconcelos', '21', 'M', 'Botão', 'Botão', '21/07/2021'),
-        createData('Andre Vasconcelos', '21', 'M', 'Botão', 'Botão', '21/07/2021'),
-        createData('Andre Vasconcelos', '21', 'M', 'Botão', 'Botão', '21/07/2021'),
-        createData('Andre Vasconcelos', '21', 'M', 'Botão', 'Botão', '21/07/2021'),
-        createData('Andre Vasconcelos', '21', 'M', 'Botão', 'Botão', '21/07/2021'),
-        createData('Andre Vasconcelos', '21', 'M', 'Botão', 'Botão', '21/07/2021'),
-        createData('Andre Vasconcelos', '21', 'M', 'Botão', 'Botão', '21/07/2021'),
-        createData('Andre Vasconcelos', '21', 'M', 'Botão', 'Botão', '21/07/2021'),
-        createData('Andre Vasconcelos', '21', 'M', 'Botão', 'Botão', '21/07/2021'),
-      ];
 
     const useStyles = makeStyles({
         root: {
@@ -60,16 +68,14 @@ function Histórico() {
             maxHeight: 600,
         },
     });
-
     const classes = useStyles();
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [periodo, setPeriodo] = useState("Hoje");
-
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
     };
-
+    
     const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
         setRowsPerPage(+event.target.value);
         setPage(0);
@@ -79,6 +85,17 @@ function Histórico() {
         return `${page * rowsPerPage + 1}-${page * rowsPerPage + rowsPerPage} de ${length}`
     }
 
+    const [open, setOpen] = React.useState(false);
+
+    const handleClickOpen = (newFeedback : string) => {
+        setFeedback(newFeedback);
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+    const [feedbackAtual, setFeedback] = useState <string>();
     return (
         <div style ={{marginLeft: "2%"}}>
             <div style ={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -100,6 +117,24 @@ function Histórico() {
                             <MenuItem value={"Ano"}>Ano</MenuItem>
                         </Select>
                     </FormControl>
+                    <Dialog
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                    >
+                    <DialogTitle id="alert-dialog-title">{"Feedback do usuário"}</DialogTitle>
+                        <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                            {feedbackAtual}
+                        </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={handleClose} color="primary">
+                                Fechar
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
                 </div>
             </div>
             
@@ -121,11 +156,29 @@ function Histórico() {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                            {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
                                 return (
-                                    <TableRow hover role="checkbox" tabIndex={-1} key={row.name}>
+                                    <TableRow hover role="checkbox" tabIndex={-1} key={index}>
                                         {columns.map((column) => {
                                             const value = row[column.id];
+                                            if (value==="Botão Feedback") {
+                                                return (
+                                                    <TableCell key={column.id} align={column.align}>
+                                                            <Button onClick={()=>handleClickOpen(row.feedback)}>
+                                                                <FeedbackIcon />
+                                                            </Button>
+                                                    </TableCell>
+                                                )
+                                            }
+                                            if (value==="Botão Telegram") {
+                                                return (
+                                                    <TableCell key={column.id} align={column.align}>
+                                                            <Button onClick={()=>alert('Telegram')}>
+                                                                <TelegramIcon />
+                                                                </Button>
+                                                        </TableCell>
+                                                        )
+                                            }
                                             return (
                                                 <TableCell key={column.id} align={column.align}>
                                                     {column.format && typeof value === 'number' ? column.format(value) : value}
