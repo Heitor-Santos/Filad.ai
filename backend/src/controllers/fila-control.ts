@@ -11,7 +11,7 @@ function entrarNaFila(user: Client) {
 }
 
 function sairDaFila(req: Request, res: Response) {
-    const index = fila.findIndex(client => client.telegram_id == req.query.telegram_id)
+    const index = fila.findIndex(client => client.telegram_id == Number(req.query.telegram_id))
     if (index == -1) {
         return res.send({ error: "user_not_found" })
     }
@@ -41,7 +41,7 @@ function statusFila(req: Request, res: Response) {
     })
 }
 
-function getPrevisaoUser(telegram_id: string) {
+function getPrevisaoUser(telegram_id: number) {
     const index = fila.findIndex(client => client.telegram_id == telegram_id);
     if (index == -1) {
         return { error: "user_not_found" };

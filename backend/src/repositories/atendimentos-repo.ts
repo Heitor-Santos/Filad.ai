@@ -1,32 +1,32 @@
-import {Client} from './fila-repo';
+import { Client } from './fila-repo';
 
-export const atendimentos:Client[] = [
+export const atendimentos: Client[] = [
     {
-        telegram_id: '@marcos_lira87',
+        telegram_id: 1,
         nome: 'Francisco',
         sexo: 'M',
         idade: 21,
         entrou_na_fila_em: new Date("2021/07/15 12:00:30"),
         saiu_da_fila_em: new Date("2021/07/15 14:03:44"),
-        feedback:{
+        feedback: {
             positivo: true,
             descricao: "eu achei massa!"
         }
     },
     {
-        telegram_id: '@júlioboladao77',
+        telegram_id: 2,
         nome: 'Júlio',
         sexo: 'M',
         idade: 18,
         entrou_na_fila_em: new Date("2021/07/15 12:03:30"),
         saiu_da_fila_em: new Date("2021/07/15 14:06:52"),
-        feedback:{
+        feedback: {
             positivo: true,
             descricao: "Achei que agilizou o processo!"
         }
     },
     {
-        telegram_id: '@Andrezão00',
+        telegram_id: 3,
         nome: 'André',
         sexo: 'M',
         idade: 22,
@@ -34,7 +34,7 @@ export const atendimentos:Client[] = [
         saiu_da_fila_em: new Date("2021/08/08 14:10:35"),
     },
     {
-        telegram_id: '@FernandinhaDoGera',
+        telegram_id: 4,
         nome: 'Fernanda',
         sexo: 'F',
         idade: 33,
@@ -46,7 +46,7 @@ export const atendimentos:Client[] = [
         // }
     },
     {
-        telegram_id: '@Josefa123',
+        telegram_id: 5,
         nome: 'Josefa',
         sexo: 'F',
         idade: 33,
@@ -58,31 +58,31 @@ export const atendimentos:Client[] = [
         // }
     },
     {
-        telegram_id: '@Rodrigo51',
+        telegram_id: 6,
         nome: 'Rodrigo',
         sexo: 'M',
         idade: 52,
         entrou_na_fila_em: new Date("2021/08/08 12:15:30"),
         saiu_da_fila_em: new Date("2021/08/08 14:11:55"),
-        feedback:{
+        feedback: {
             positivo: false,
             descricao: "Não achei que fez muita diferença!"
         }
     },
     {
-        telegram_id: '@MariaMadalena',
+        telegram_id: 7,
         nome: 'Maria',
         sexo: 'F',
         idade: 43,
         entrou_na_fila_em: new Date("2021/08/08 16:17:30"),
         saiu_da_fila_em: new Date("2021/08/08 17:14:25"),
-        feedback:{
+        feedback: {
             positivo: true,
             descricao: "Gostei! Adoro essas modernindades"
         }
     },
     {
-        telegram_id: '@FernandinhaDoGera',
+        telegram_id: 8,
         nome: 'Fernanda',
         sexo: 'F',
         idade: 33,
@@ -94,7 +94,7 @@ export const atendimentos:Client[] = [
         // }
     },
     {
-        telegram_id: '@Jurema12',
+        telegram_id: 9,
         nome: 'Jurema',
         sexo: 'F',
         idade: 23,

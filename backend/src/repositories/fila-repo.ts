@@ -1,5 +1,5 @@
 export interface Client{
-    telegram_id: string;
+    telegram_id: number;
     nome: string;
     sexo: string;
     idade: number;

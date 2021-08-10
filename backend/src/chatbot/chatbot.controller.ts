@@ -65,7 +65,7 @@ const queryResult = async (chatbot: Chatbot, query: BotUpdate) => {
       nome: name,
       idade: 0,
       sexo: 'O',
-      telegram_id: "" + chat_id,
+      telegram_id: chat_id,
       entrou_na_fila_em: new Date(query.message.date),
       saiu_da_fila_em: null,
     }
@@ -80,8 +80,8 @@ const queryResult = async (chatbot: Chatbot, query: BotUpdate) => {
     }
 
     const sendMessageResult = await sendMessageTo(chatbot, chat_id, msg);
-  }else if (text.includes('status')){
-    const result: any = getPrevisaoUser(""+chat_id);
+  } else if (text.includes('status')) {
+    const result: any = getPrevisaoUser(chat_id);
     let msg = `Sua posicao atual e: ${result.posicao} e a previsao de espera e de ${result.previsao} minutos.`;
     if (result.error) {
       if (result.error == 'user_not_found')
