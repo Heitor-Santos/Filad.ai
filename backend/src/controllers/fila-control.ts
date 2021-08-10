@@ -17,7 +17,11 @@ function sairDaFila(req: Request, res: Response) {
     }
 
     const user = fila.splice(index, 1)[0];
-    user.saiu_da_fila_em = new Date();
+    if (req.query.desistencia) {
+        user.desistencia = true;
+    } else {
+        user.saiu_da_fila_em = new Date();
+    }
     atendimentos.push(user);
     return res.send({ data: user })
 }
@@ -60,6 +64,7 @@ function calcularPrevisaoEspera() {
     let total = 0;
 
     atendimentos.forEach(client => {
+        if (client.desistencia) return;
         if (client.entrou_na_fila_em && client.saiu_da_fila_em) {
             total -= client.entrou_na_fila_em.getTime();
             total += client.saiu_da_fila_em.getTime();
@@ -72,7 +77,7 @@ function calcularPrevisaoEspera() {
 
 function getHistory(req: Request, res: Response) {
     try {
-        const {start, end} = req.query;
+        const { start, end } = req.query;
 
         if (!start) {
             return res.status(400).send({ error: 'Data início está vazia' });
@@ -81,19 +86,19 @@ function getHistory(req: Request, res: Response) {
             return res.status(400).send({ error: 'Data fim está vazia' });
         }
 
-        let data = atendimentos.filter( elem => {
+        let data = atendimentos.filter(elem => {
             return (elem.entrou_na_fila_em >= new Date(String(start)) && elem.entrou_na_fila_em <= new Date(String(end)));
         });
 
         return res.send(data);
     } catch (error) {
-        return res.status(400).send({error: 'Falhou em retornar os histórico'});
+        return res.status(400).send({ error: 'Falhou em retornar os histórico' });
     }
 }
 
 function getStatistics(req: Request, res: Response) {
     try {
-        const {start, end} = req.query;
+        const { start, end } = req.query;
 
         if (!start) {
             return res.status(400).send({ error: 'Data início está vazia' });
@@ -117,25 +122,25 @@ function getStatistics(req: Request, res: Response) {
         let today = new Date();
         today.setHours(0, 0, 0);
 
-        for(let i = 0; i < 12; i++) {
-            data.attendances_two_hours.push({hour : i * 2, pacientes: 0});
+        for (let i = 0; i < 12; i++) {
+            data.attendances_two_hours.push({ hour: i * 2, pacientes: 0 });
         }
 
-        atendimentos.forEach( elem => {
+        atendimentos.forEach(elem => {
             if (elem.entrou_na_fila_em >= new Date(String(start)) && elem.entrou_na_fila_em <= new Date(String(end))) {
-                if(elem.feedback) {
-                    if(elem.feedback.positivo)
+                if (elem.feedback) {
+                    if (elem.feedback.positivo)
                         data.good_feedbacks++;
                     else
                         data.bad_feedbacks++;
                 }
-                if(elem.saiu_da_fila_em === null) {
+                if (elem.saiu_da_fila_em === null) {
                     data.leave_rate++;
-                } else if(elem.saiu_da_fila_em) {
+                } else if (elem.saiu_da_fila_em) {
                     data.avg_time += (elem.saiu_da_fila_em.getTime() - elem.entrou_na_fila_em.getTime());
                     data.attendances++;
                 }
-                if(elem.entrou_na_fila_em && elem.entrou_na_fila_em.getTime() >= today.getTime()) {
+                if (elem.entrou_na_fila_em && elem.entrou_na_fila_em.getTime() >= today.getTime()) {
                     data.attendances_two_hours[Math.floor(elem.entrou_na_fila_em.getHours() / 2)].pacientes++;
                 }
 
@@ -144,50 +149,50 @@ function getStatistics(req: Request, res: Response) {
             }
         });
 
-        data.avg_time = Math.floor(Math.floor(data.avg_time/60000)/data.attendances);
+        data.avg_time = Math.floor(Math.floor(data.avg_time / 60000) / data.attendances);
         data.users = mp.size;
-        if(totalIncomingUsers > 0)
+        if (totalIncomingUsers > 0)
             data.leave_rate /= totalIncomingUsers;
 
 
         return res.send(data);
     } catch (error) {
-        return res.status(400).send({error: 'Falhou em retornar estatísticas'});
+        return res.status(400).send({ error: 'Falhou em retornar estatísticas' });
     }
 }
 
 function setFeedback(req: Request, res: Response) {
     try {
-        const {telegram_id, feedback} = req.body;
+        const { telegram_id, feedback } = req.body;
 
-        if(!telegram_id) {
-            return res.status(400).send({ error: 'Telegram_id não recebido'});
+        if (!telegram_id) {
+            return res.status(400).send({ error: 'Telegram_id não recebido' });
         }
 
-        if(!feedback) {
-            return res.status(400).send({ error: 'Feedback não recebido'});
+        if (!feedback) {
+            return res.status(400).send({ error: 'Feedback não recebido' });
         }
 
-        if(typeof(feedback.positivo) !== 'boolean' || typeof(feedback.descricao) !== 'string') {
-            return res.status(400).send({ error: 'Feedback não está no formato correto'});
+        if (typeof (feedback.positivo) !== 'boolean' || typeof (feedback.descricao) !== 'string') {
+            return res.status(400).send({ error: 'Feedback não está no formato correto' });
         }
 
         let feedbackSaved: boolean = false;
 
-        atendimentos.forEach( (elem, index) => {
-            if(elem.telegram_id === telegram_id) {
-                fila[index].feedback = { positivo: feedback.positivo, descricao: feedback.descricao};
+        atendimentos.forEach((elem, index) => {
+            if (elem.telegram_id === telegram_id) {
+                fila[index].feedback = { positivo: feedback.positivo, descricao: feedback.descricao };
                 feedbackSaved = true;
             }
         });
 
-        if(!feedbackSaved) {
-            return res.status(400).send({ error: 'Usuário não encontrado'});
+        if (!feedbackSaved) {
+            return res.status(400).send({ error: 'Usuário não encontrado' });
         }
 
-        return res.send({feedbackSaved});
+        return res.send({ feedbackSaved });
     } catch (error) {
-        return res.status(400).send({error: 'Falhou em salvar feedback'});
+        return res.status(400).send({ error: 'Falhou em salvar feedback' });
     }
 }
 

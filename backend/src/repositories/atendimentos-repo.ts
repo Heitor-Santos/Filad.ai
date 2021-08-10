@@ -44,6 +44,7 @@ export const atendimentos: Client[] = [
         //     positivo: true,
         //     descricao: "Gostei! Adoro essas modernindades"
         // }
+        desistencia: true
     },
     {
         telegram_id: 5,
