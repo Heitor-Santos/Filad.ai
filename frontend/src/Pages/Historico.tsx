@@ -2,6 +2,7 @@ import { Button, createStyles, Dialog, DialogActions, DialogContent, DialogConte
 import React, { useEffect, useRef, useState } from 'react';
 import TelegramIcon from '@material-ui/icons/Telegram';
 import FeedbackIcon from '@material-ui/icons/Feedback';
+import axios from 'axios';
 
 interface Column {
     id: 'name' | 'age' | 'sex' | 'feedback' | 'telegram' | 'visit';
@@ -22,29 +23,26 @@ interface Rows {
 
 function Histórico() {
     const [rows, setRows] = useState<Array<Rows>>([])
-    useEffect(() => {
-        //const req = axios.get()
-        //const rowsTest = req.rows.map(user=>createRows(user.name,user.idade,user.sexo,'Botão Telegram', "Botão feedback", user.data))
 
-
+    const fetchHistory = async () => {
+        const from = '2000-08-09T20:00:00.000Z';
+        const to = '2023-08-09T20:00:00.000Z';
+        const res = await axios.get(`http://localhost:3333/api/fila/historico?start=${from}&end=${to}`);
+        
+        const arr = res.data;
         const rowsTest = [
             createRows('Andre Vasconcelos', 21, 'M', 'Botão Feedback', 'Botão Telegram', '21/07/2021'),
-            createRows('Andre Vasconcelos', 21, 'M', 'Botão Feedback', 'Botão Telegram', '21/07/2021'),
-            createRows('Andre Vasconcelos', 21, 'M', 'Botão Feedback', 'Botão Telegram', '21/07/2021'),
-            createRows('Andre Vasconcelos', 21, 'M', 'Botão Feedback', 'Botão Telegram', '21/07/2021'),
-            createRows('Andre Vasconcelos', 21, 'M', 'Botão Feedback', 'Botão Telegram', '21/07/2021'),
-            createRows('Andre Vasconcelos', 21, 'M', 'Botão Feedback', 'Botão Telegram', '21/07/2021'),
-            createRows('Andre Vasconcelos', 21, 'M', 'Botão Feedback', 'Botão Telegram', '21/07/2021'),
-            createRows('Andre Vasconcelos', 21, 'M', 'Botão Feedback', 'Botão Telegram', '21/07/2021'),
-            createRows('Andre Vasconcelos', 21, 'M', 'Botão Feedback', 'Botão Telegram', '21/07/2021'),
-            createRows('Andre Vasconcelos', 21, 'M', 'Botão Feedback', 'Botão Telegram', '21/07/2021'),
-            createRows('Andre Vasconcelos', 21, 'M', 'Botão Feedback', 'Botão Telegram', '21/07/2021'),
-            createRows('Andre Vasconcelos', 21, 'M', 'Botão Feedback', 'Botão Telegram', '21/07/2021'),
-            createRows('Andre Vasconcelos', 21, 'M', 'Botão Feedback', 'Botão Telegram', '21/07/2021'),
-            createRows('Andre Vasconcelos', 21, 'M', 'Botão Feedback', 'Botão Telegram', '21/07/2021'),
-            createRows('Andre Vasconcelos', 21, 'M', 'Botão Feedback', 'Botão Telegram', '21/07/2021'),
         ]
-        setRows(rowsTest)
+        for (let client of arr){
+            const data = new Date(client.saiu_da_fila_em).toLocaleDateString();
+            rowsTest.push(createRows(client.nome, Number(client.idade), client.sexo, 'Botão Feedback', 'Botão Telegram', data));
+        };
+
+        setRows(rowsTest);
+    }
+
+    useEffect(() => {        
+        fetchHistory();
     }, [])
 
     const columns: Column[] = [
