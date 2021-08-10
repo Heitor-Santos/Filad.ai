@@ -1,79 +1,37 @@
-export interface Propaganda{
-    tex: string;
+export interface Propaganda {
+    estabelecimento: string,
+    text: string;
     imagem: string;
-    faixa: string;
-    sexo: string;
+    faixa: { from: number, upto: number };
+    sexo: { M: boolean, F: boolean, O: boolean };
 }
 
 export const arrayPropaganda: Propaganda[] = [
     {
-        tex: "Que tal passar esse tempo de espera tomando um café quentinho?",
+        estabelecimento: "trescoracoes",
+        text: "Que tal passar esse tempo de espera tomando um café quentinho?",
         imagem: "imgCafe.jpg",
-        faixa: "16-20",
-        sexo: "M"
+        faixa: { from: 16, upto: 80 },
+        sexo: { M: true, F: true, O: true }
     },
 
     {
-        tex: "Que tal passar esse tempo de espera tomando um café quentinho?",
-        imagem: "imgCafe.jpg",
-        faixa: "20-30",
-        sexo: "M"
-    },
-
-    {
-        tex: "Que tal passar esse tempo de espera tomando um café quentinho?",
-        imagem: "imgCafe.jpg",
-        faixa: "16-20",
-        sexo: "F"
-    },
-
-    {
-        tex: "Com o atendimento super rápido da Loja de Roupas, você vai poder voltar antes que chegue sua vez na fila. Venha conhecer os nossos produtos!",
+        estabelecimento: "centauro",
+        text: "Com o atendimento super rápido da Loja de Roupas, você vai poder voltar antes que chegue sua vez na fila. Venha conhecer os nossos produtos!",
         imagem: "imgLojaR.jpg",
-        faixa: "20-30",
-        sexo: "M"
-    },
-
-    {
-        tex: "Venha conferir belíssimos sapatos de grife na Sapataria!",
-        imagem: "imgSapatos.jpg",
-        faixa: "20-30",
-        sexo: "F"
-    },
-
-    {
-        tex: "Tênis e chuteiras com até 30% de desconto na Sapataria!",
-        imagem: "imgSapatosM.jpg",
-        faixa: "16-20",
-        sexo: "M"
-    },
-
-    {
-        tex: "O que é melhor, esperar com um sorvete ou sem um sorvete? Passe aqui na sorveteria! temos ótimos sabores, incluindo melão!",
-        imagem: "imgSvt0.jpg",
-        faixa: "16-20",
-        sexo: "M"
-    },
-
-    {
-        tex: "O que é melhor, esperar com um sorvete ou sem um sorvete? Passe aqui na sorveteria! temos ótimos sabores, incluindo morango!",
-        imagem: "imgSvt1.jpg",
-        faixa: "16-20",
-        sexo: "F"
-    },
-
-    {
-        tex: "O que é melhor, esperar com um sorvete ou sem um sorvete? Passe aqui na sorveteria! temos ótimos sabores, até café!",
-        imagem: "imgSvt2.jpg",
-        faixa: "30-40",
-        sexo: "M"
-    },
-
-    {
-        tex: "O que é melhor, esperar com um sorvete ou sem um sorvete? Passe aqui na sorveteria! temos ótimos sabores, até ameixa!",
-        imagem: "imgSvt3.jpg",
-        faixa: "30-40",
-        sexo: "F"
+        faixa: { from: 16, upto: 80 },
+        sexo: { M: true, F: true, O: true }
     }
 
 ]
+
+const getByFilters = (filter: any) => {
+    return arrayPropaganda.filter((ad: any) => {
+        for (let key of Object.keys(filter)) {
+            if (filter[key] != ad[key]) return false;
+        }
+        return true;
+    });
+}
+
+export { getByFilters };

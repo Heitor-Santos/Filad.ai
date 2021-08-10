@@ -1,23 +1,17 @@
-//import { Request, Response } from 'express';
-import { Propaganda, arrayPropaganda } from '../repositories/propaganda-repo';
+import { getByFilters } from '../repositories/propagandas-repo';
 
-var cAge: string;
-var cSex: string;
+const getPropaganda = (estabelecimento?: string, faixa?: { from: number, upto: number }, sexo?: { M: boolean, F: boolean, O: boolean }) => {
+    const filterObj: any = {};
+    if (estabelecimento) filterObj['estabelecimento'] = estabelecimento;
+    if (faixa) filterObj['faixa'] = faixa;
+    if (sexo) filterObj['sexo'] = sexo;
 
-function getPropaganda(faixa:string,sexo:string){
-    cAge = faixa;
-    cSex = sexo;
-    const filter = arrayPropaganda.filter(filterAge).filter(filterSex);
-    const arrL = filter.length();
-    return filter[Math.floor(Math.random() * arrL)]
+    const arr = getByFilters(filterObj);
+    if (!arr.length) {
+        return undefined;
+    }
+
+    return arr[Math.floor(Math.random() * (10 ** arr.length)) % arr.length];
 }
 
-function filterAge(age:string){
-    return age === cAge;
-}
-
-function filterSex(sex:string){
-    return sex === cSex;
-}
-
-export{ getPropaganda }
+export { getPropaganda }
