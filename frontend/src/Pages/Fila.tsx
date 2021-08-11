@@ -26,9 +26,7 @@ const deny_icon = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAAB
 const accept_icon = 'data:image/png;base64,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';
 
 function FilaGeral() {
-    const [filaAtendimento, setFilaAtendimento] = useState([
-        createUser('Andre Vsasconcelos', '21', 'M', 'andre69', 'Andrevas86'),
-    ]);
+    const [filaAtendimento, setFilaAtendimento] = useState<User[]>([]); 
     const [clientsToday, setClientsToday] = useState(0);
     const [averageWaitTime, setAverageWaitTime] = useState(0);
 
@@ -66,8 +64,11 @@ function FilaGeral() {
 
     useEffect(initConfig, []);
 
-    const removeUserFromQueue = (telegram_id: number, desistencia: boolean) => {
-        axios.post('http://localhost:3333/api/fila/sair', {telegram_id, desistencia});
+    const removeUserFromQueue = (telegram_id: number, desistencia: boolean, index: number) => {
+        const newArr = [...filaAtendimento];
+        newArr.splice(index,1);
+        setFilaAtendimento(newArr);
+        axios.post('http://localhost:3333/api/fila/sair', { telegram_id, desistencia });
     }
 
     interface Column {
@@ -188,8 +189,8 @@ function FilaGeral() {
                                                     })}
                                                     <TableCell>
                                                         {filaAtendimento[idx].username ? <a target='_blank' href={'https://t.me/' + filaAtendimento[idx].username}><img style={{ width: '18px', cursor: 'pointer' }} src={telegram_icon} /></a> : null}
-                                                        <button onClick={()=>removeUserFromQueue(filaAtendimento[idx].telegram_id, true)}><img style={{ width: '20px', cursor: 'pointer' }} src={deny_icon} /></button>
-                                                        <button onClick={()=>removeUserFromQueue(filaAtendimento[idx].telegram_id, false)}><img style={{ width: '18px', cursor: 'pointer' }} src={accept_icon} /></button>
+                                                        <img onClick={() => removeUserFromQueue(filaAtendimento[idx].telegram_id, true, idx)} style={{ width: '20px', cursor: 'pointer' }} src={deny_icon} />
+                                                        <img onClick={() => removeUserFromQueue(filaAtendimento[idx].telegram_id, false, idx)} style={{ width: '18px', cursor: 'pointer' }} src={accept_icon} />
                                                     </TableCell>
                                                 </TableRow>
                                             );
