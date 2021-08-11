@@ -69,6 +69,7 @@ const queryResult = async (chatbot: Chatbot, query: BotUpdate) => {
       entrou_na_fila_em: new Date(query.message.date),
       saiu_da_fila_em: null,
     }
+    if (query.message.from.username) user.username = query.message.from.username;
     const result: any = entrarNaFila(user);
     let msg = `Voce entrou na fila. Sua posicao atual e: ${result.posicao} e a previsao de espera e de ${result.previsao} minutos.`;
 

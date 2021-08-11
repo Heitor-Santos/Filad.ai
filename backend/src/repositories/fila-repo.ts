@@ -3,6 +3,7 @@ export interface Client {
     nome: string;
     sexo: string;
     idade: number;
+    username?: string;
     entrou_na_fila_em: Date;
     saiu_da_fila_em: Date | null;
     feedback?: {
