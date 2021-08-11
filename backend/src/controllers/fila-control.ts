@@ -11,18 +11,20 @@ function entrarNaFila(user: Client) {
 }
 
 function sairDaFila(req: Request, res: Response) {
-    const index = fila.findIndex(client => client.telegram_id == Number(req.query.telegram_id))
+    const index = fila.findIndex(client => client.telegram_id == Number(req.body.telegram_id))
     if (index == -1) {
         return res.send({ error: "user_not_found" })
     }
 
     const user = fila.splice(index, 1)[0];
-    if (req.query.desistencia) {
+    if (req.body.desistencia) {
         user.desistencia = true;
     } else {
         user.saiu_da_fila_em = new Date();
     }
     atendimentos.push(user);
+    console.log(req.body)
+    console.log("saiu", user)
     return res.send({ data: user })
 }
 

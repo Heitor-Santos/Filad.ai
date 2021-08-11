@@ -66,6 +66,10 @@ function FilaGeral() {
 
     useEffect(initConfig, []);
 
+    const removeUserFromQueue = (telegram_id: number, desistencia: boolean) => {
+        axios.post('http://localhost:3333/api/fila/sair', {telegram_id, desistencia});
+    }
+
     interface Column {
         id: 'nome' | 'idade' | 'sexo';
         label: string;
@@ -184,8 +188,8 @@ function FilaGeral() {
                                                     })}
                                                     <TableCell>
                                                         {filaAtendimento[idx].username ? <a target='_blank' href={'https://t.me/' + filaAtendimento[idx].username}><img style={{ width: '18px', cursor: 'pointer' }} src={telegram_icon} /></a> : null}
-                                                        <img style={{ width: '20px', cursor: 'pointer' }} src={deny_icon} />
-                                                        <img style={{ width: '18px', cursor: 'pointer' }} src={accept_icon} />
+                                                        <button onClick={()=>removeUserFromQueue(filaAtendimento[idx].telegram_id, true)}><img style={{ width: '20px', cursor: 'pointer' }} src={deny_icon} /></button>
+                                                        <button onClick={()=>removeUserFromQueue(filaAtendimento[idx].telegram_id, false)}><img style={{ width: '18px', cursor: 'pointer' }} src={accept_icon} /></button>
                                                     </TableCell>
                                                 </TableRow>
                                             );

@@ -66,7 +66,7 @@ const queryResult = async (chatbot: Chatbot, query: BotUpdate) => {
       idade: 0,
       sexo: 'O',
       telegram_id: chat_id,
-      entrou_na_fila_em: new Date(query.message.date),
+      entrou_na_fila_em: new Date(),
       saiu_da_fila_em: null,
     }
     if (query.message.from.username) user.username = query.message.from.username;
