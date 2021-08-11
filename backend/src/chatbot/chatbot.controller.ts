@@ -56,39 +56,51 @@ const sendMessageTo = async (chatbot: Chatbot, chat_id: number, text: string) =>
   return axios.get(requestUrl);
 }
 
+const joinQueue = async (name: string, chat_id: number, username: string, chatbot: Chatbot,) => {
+  const user: Client = {
+    nome: name,
+    idade: 0,
+    sexo: 'O',
+    telegram_id: chat_id,
+    entrou_na_fila_em: new Date(),
+    saiu_da_fila_em: null,
+  }
+  if (username) user.username = username;
+  const result: any = entrarNaFila(user);
+  let msg = `Voce entrou na fila. Sua posicao atual e: ${result.posicao} e a previsao de espera e de ${result.previsao} minutos.`;
+
+  if (result.error) {
+    if (result.error == 'user_already_in_queue')
+      msg = "Esse usuario ja esta na fila.";
+    else if (result.error == 'user_not_found')
+      msg = "Erro ao entrar na fila. Por favor, tente novamente.";
+  }
+
+  const sendMessageResult = await sendMessageTo(chatbot, chat_id, msg);
+}
+
+const requestStatus = async (chat_id: number, chatbot: Chatbot) => {
+  const result: any = getPrevisaoUser(chat_id);
+  let msg = `Sua posicao atual e: ${result.posicao} e a previsao de espera e de ${result.previsao} minutos.`;
+  if (result.error) {
+    if (result.error == 'user_not_found')
+      msg = 'Voce nao esta em nenhuma fila. Envie "start" para entrar.';
+  }
+  const sendMessageResult = await sendMessageTo(chatbot, chat_id, msg);
+}
+
 const queryResult = async (chatbot: Chatbot, query: BotUpdate) => {
   const text = query.message.text;
-  const name = query.message.chat.first_name + ' ' + query.message.chat.last_name;
+  const name = query.message.chat.first_name + (query.message.chat.last_name ? ' ' + query.message.chat.last_name : '');
   const chat_id = query.message.chat.id;
-  if (text && text.includes('start') || text.includes('Entrar na fila')) {
-    const user: Client = {
-      nome: name,
-      idade: 0,
-      sexo: 'O',
-      telegram_id: chat_id,
-      entrou_na_fila_em: new Date(),
-      saiu_da_fila_em: null,
-    }
-    if (query.message.from.username) user.username = query.message.from.username;
-    const result: any = entrarNaFila(user);
-    let msg = `Voce entrou na fila. Sua posicao atual e: ${result.posicao} e a previsao de espera e de ${result.previsao} minutos.`;
+  const username = query.message.from.username;
 
-    if (result.error) {
-      if (result.error == 'user_already_in_queue')
-        msg = "Esse usuario ja esta na fila.";
-      else if (result.error == 'user_not_found')
-        msg = "Erro ao entrar na fila. Por favor, tente novamente.";
-    }
+  if (!text) return;
 
-    const sendMessageResult = await sendMessageTo(chatbot, chat_id, msg);
-  } else if (text && text.includes('status')) {
-    const result: any = getPrevisaoUser(chat_id);
-    let msg = `Sua posicao atual e: ${result.posicao} e a previsao de espera e de ${result.previsao} minutos.`;
-    if (result.error) {
-      if (result.error == 'user_not_found')
-        msg = 'Voce nao esta em nenhuma fila. Envie "start" para entrar.';
-    }
-    const sendMessageResult = await sendMessageTo(chatbot, chat_id, msg);
+  if (text.includes('start') || text.includes('Entrar na fila')) {
+    await joinQueue(name, chat_id, username, chatbot);
+  } else if (text.includes('status')) {
+    await requestStatus(chat_id, chatbot);
   }
 }
 
