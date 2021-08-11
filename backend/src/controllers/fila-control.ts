@@ -123,7 +123,7 @@ function getStatistics(req: Request, res: Response) {
         today.setHours(0, 0, 0);
 
         for (let i = 0; i < 12; i++) {
-            data.attendances_two_hours.push({ hour: i * 2, pacientes: 0 });
+            data.attendances_two_hours.push({ hour: i * 2, atendidos: 0 });
         }
 
         atendimentos.forEach(elem => {
@@ -140,8 +140,8 @@ function getStatistics(req: Request, res: Response) {
                     data.avg_time += (elem.saiu_da_fila_em.getTime() - elem.entrou_na_fila_em.getTime());
                     data.attendances++;
                 }
-                if (elem.entrou_na_fila_em && elem.entrou_na_fila_em.getTime() >= today.getTime()) {
-                    data.attendances_two_hours[Math.floor(elem.entrou_na_fila_em.getHours() / 2)].pacientes++;
+                if (elem.entrou_na_fila_em.getTime() >= new Date(String(start)).getTime() && elem.saiu_da_fila_em && elem.saiu_da_fila_em.getTime() <= new Date(String(end)).getTime()) {
+                    data.attendances_two_hours[Math.floor(elem.entrou_na_fila_em.getHours() / 2)].atendidos++;
                 }
 
                 mp.set(elem.telegram_id, true);

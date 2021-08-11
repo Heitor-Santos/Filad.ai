@@ -2,6 +2,7 @@ import { FormControl, MenuItem, Select } from '@material-ui/core';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import React, { useState } from 'react';
 import { useEffect } from 'react';
+import axios from 'axios';
 import {
     Line,
     LineChart,
@@ -21,27 +22,26 @@ interface Stats {
     leave_rate: number;
     attendances_two_hours: {
         hour: number;
-        pacientes: number;
+        atendidos: number;
     }[]
 }
 function Estatistica() {
     const [periodo, setPeriodo] = useState("Hoje");
     const [stats, setStats] = useState<Stats>()
-    useEffect(() => {
-        setStats({
-            attendances: 45,
-            avg_time: 23,
-            bad_feedbacks: 78,
-            good_feedbacks: 100,
-            leave_rate: 11,
-            users: 178,
-            attendances_two_hours: [
-                { hour: 9, pacientes: 17 },
-                { hour: 11, pacientes: 12 },
-                { hour: 15, pacientes: 16 },
-                { hour: 17, pacientes: 10 }]
-        })
+    const fetchHistory = async () => {
+        const from = '2000-08-09T20:00:00.000Z';
+        const to = '2023-08-09T20:00:00.000Z';
+        const res = await axios.get(`http://localhost:3333/api/fila/estatisticas?start=${from}&end=${to}`);
+        const arr = res.data;
+        setStats(arr)
+    }
+    useEffect(() => {        
+        fetchHistory();
     }, [])
+
+    useEffect(()=>{
+        console.log(stats)
+    },[stats])
     return (
         <>
             {stats ?
@@ -107,7 +107,7 @@ function Estatistica() {
                                     <YAxis />
                                     <Tooltip />
                                     <CartesianGrid stroke="#f5f5f5" />
-                                    <Line type="monotone" dataKey="pacientes" stroke="#ff7300" yAxisId={0} />
+                                    <Line type="monotone" dataKey="atendidos" stroke="#ff7300" yAxisId={0} />
                                 </LineChart>
                             </ResponsiveContainer>
                         </div>

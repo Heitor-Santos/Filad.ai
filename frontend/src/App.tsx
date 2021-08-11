@@ -55,6 +55,9 @@ function App() {
               <Route path="/estatistica">
                 <Estatistica />
               </Route>
+              <Route path="/">
+                <Fila />
+              </Route>
             </Switch>
           </Router>
         </div>

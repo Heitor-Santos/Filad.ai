@@ -5,7 +5,7 @@ import FeedbackIcon from '@material-ui/icons/Feedback';
 import axios from 'axios';
 
 interface Column {
-    id: 'name' | 'age' | 'sex' | 'feedback' | 'telegram' | 'visit';
+    id: 'name' | 'age' | 'sex' | 'bt_feedback' | 'bt_telegram' | 'visit';
     label: string;
     minWidth?: number;
     align?: 'right' | 'center';
@@ -16,7 +16,9 @@ interface Rows {
     name: string;
     age: number;
     sex: any;
+    bt_feedback:any;
     feedback: any;
+    bt_telegram:any;
     telegram: any;
     visit: any;
 }
@@ -31,11 +33,12 @@ function Histórico() {
         
         const arr = res.data;
         const rowsTest = [
-            createRows('Andre Vasconcelos', 21, 'M', 'Botão Feedback', 'Botão Telegram', '21/07/2021'),
+            createRows('Andre Vasconcelos', 21, 'M', 'Botão Feedback', undefined, 'Botão Telegram', undefined, '21/07/2021'),
         ]
         for (let client of arr){
             const data = new Date(client.saiu_da_fila_em).toLocaleDateString();
-            rowsTest.push(createRows(client.nome, Number(client.idade), client.sexo, 'Botão Feedback', 'Botão Telegram', data));
+            console.log(client)
+            rowsTest.push(createRows(client.nome, Number(client.idade), client.sexo, 'Botão Feedback', client.feedback, 'Botão Telegram', client.telegram_id, data));
         };
 
         setRows(rowsTest);
@@ -49,13 +52,13 @@ function Histórico() {
         { id: 'name', label: 'Nome', minWidth: 170 },
         { id: 'age', label: 'Idade', minWidth: 100, align: 'center' },
         { id: 'sex', label: 'Sexo', minWidth: 100, align: 'center' },
-        { id: 'feedback', label: 'Feedback', minWidth: 100, align: 'center' },
-        { id: 'telegram', label: 'Telegram', minWidth: 100, align: 'center' },
+        { id: 'bt_feedback', label: 'Feedback', minWidth: 100, align: 'center' },
+        { id: 'bt_telegram', label: 'Telegram', minWidth: 100, align: 'center' },
         { id: 'visit', label: 'Data', minWidth: 100, align: 'center' }
     ];
 
-    function createRows(name: string, age: number, sex: string, feedback: any, telegram:any, visit:any): Rows {
-        return { name, age, sex, feedback, telegram, visit };
+    function createRows(name: string, age: number, sex: string, bt_feedback:any, feedback: any, bt_telegram:any, telegram:any, visit:any): Rows {
+        return { name, age, sex, bt_feedback, feedback, bt_telegram, telegram, visit };
       }
 
     const useStyles = makeStyles({
@@ -85,8 +88,13 @@ function Histórico() {
 
     const [open, setOpen] = React.useState(false);
 
-    const handleClickOpen = (newFeedback : string) => {
-        setFeedback(newFeedback);
+    const handleClickOpen = (newFeedback : any) => {
+        if(newFeedback){
+            console.log('bbbbb'+newFeedback)
+            console.log('aaa'+newFeedback.descricao)
+            setFeedback(newFeedback.descricao);
+        }
+        else setFeedback("Esse usuário não deu feedback");
         setOpen(true);
     };
 
