@@ -38,10 +38,6 @@ function Estatistica() {
     useEffect(() => {        
         fetchHistory();
     }, [])
-
-    useEffect(()=>{
-        console.log(stats)
-    },[stats])
     return (
         <>
             {stats ?
