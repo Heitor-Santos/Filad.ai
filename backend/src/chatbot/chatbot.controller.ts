@@ -60,7 +60,7 @@ const queryResult = async (chatbot: Chatbot, query: BotUpdate) => {
   const text = query.message.text;
   const name = query.message.chat.first_name + ' ' + query.message.chat.last_name;
   const chat_id = query.message.chat.id;
-  if (text.includes('start') || text.includes('Entrar na fila')) {
+  if (text && text.includes('start') || text.includes('Entrar na fila')) {
     const user: Client = {
       nome: name,
       idade: 0,
@@ -81,7 +81,7 @@ const queryResult = async (chatbot: Chatbot, query: BotUpdate) => {
     }
 
     const sendMessageResult = await sendMessageTo(chatbot, chat_id, msg);
-  } else if (text.includes('status')) {
+  } else if (text && text.includes('status')) {
     const result: any = getPrevisaoUser(chat_id);
     let msg = `Sua posicao atual e: ${result.posicao} e a previsao de espera e de ${result.previsao} minutos.`;
     if (result.error) {

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { Client, fila } from '../repositories/fila-repo';
-import { atendimentos, fetchNumberOfClientsToday} from '../repositories/atendimentos-repo';
+import { atendimentos, fetchNumberOfClientsToday } from '../repositories/atendimentos-repo';
 
 function entrarNaFila(user: Client) {
     if (fila.find(client => client.telegram_id == user.telegram_id)) {
@@ -23,8 +23,6 @@ function sairDaFila(req: Request, res: Response) {
         user.saiu_da_fila_em = new Date();
     }
     atendimentos.push(user);
-    console.log(req.body)
-    console.log("saiu", user)
     return res.send({ data: user })
 }
 
@@ -45,7 +43,7 @@ function statusFila(req: Request, res: Response) {
         fila: queryFila,
         total: queryFila.length,
         clientsToday: fetchNumberOfClientsToday(),
-        averageWaitMin: Math.floor(calcularPrevisaoEspera()),
+        averageWaitMin: calcularPrevisaoEspera(),
     })
 }
 
@@ -76,7 +74,7 @@ function calcularPrevisaoEspera() {
     });
 
     total /= 1000 * 60; // ms => minutes
-    return (total / atendimentos.length) || 0;
+    return Math.floor((total / atendimentos.length) || 0);
 }
 
 function getHistory(req: Request, res: Response) {
@@ -116,7 +114,7 @@ function getStatistics(req: Request, res: Response) {
             users: 0,
             good_feedbacks: 0,
             bad_feedbacks: 0,
-            avg_time: 0,
+            avg_time: calcularPrevisaoEspera(),
             leave_rate: 0,
             attendances_two_hours: new Array()
         };
@@ -138,10 +136,9 @@ function getStatistics(req: Request, res: Response) {
                     else
                         data.bad_feedbacks++;
                 }
-                if (elem.saiu_da_fila_em === null) {
+                if (elem.desistencia) {
                     data.leave_rate++;
                 } else if (elem.saiu_da_fila_em) {
-                    data.avg_time += (elem.saiu_da_fila_em.getTime() - elem.entrou_na_fila_em.getTime());
                     data.attendances++;
                 }
                 if (elem.entrou_na_fila_em.getTime() >= new Date(String(start)).getTime() && elem.saiu_da_fila_em && elem.saiu_da_fila_em.getTime() <= new Date(String(end)).getTime()) {
@@ -153,11 +150,9 @@ function getStatistics(req: Request, res: Response) {
             }
         });
 
-        data.avg_time = Math.floor(Math.floor(data.avg_time / 60000) / data.attendances);
         data.users = mp.size;
         if (totalIncomingUsers > 0)
-            data.leave_rate /= totalIncomingUsers;
-
+            data.leave_rate = Math.floor(100 * data.leave_rate / totalIncomingUsers);
 
         return res.send(data);
     } catch (error) {
