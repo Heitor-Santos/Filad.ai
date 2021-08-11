@@ -1,9 +1,10 @@
 .box-superior {
     width: 100%;
     min-width: 750px;
-    height: 150px;
     display: grid;
     grid-template-columns: 1fr 1fr;
+    font-family: 'Montserrat', sans-serif;
+
 }
 .box-esquerda p {
     margin: 0;
