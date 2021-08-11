@@ -120,7 +120,6 @@ function getStatistics(req: Request, res: Response) {
         let mp = new Map();
         let totalIncomingUsers = 0;
         let date_start = new Date(String(start));
-        date_start.setHours(0, 0, 0);
 
         for (let i = 0; i < 12; i++) {
             data.attendances_two_hours.push({ hour: i * 2, pacientes: 0 });
