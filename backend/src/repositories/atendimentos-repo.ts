@@ -118,9 +118,8 @@ export const atendimentos: Client[] = [
 
 export const fetchNumberOfClientsToday = () => {
     const now = new Date();
-    const lowerbound = new Date(now.getFullYear()+'-'+(('0'+(now.getMonth()+1)).slice(-2))+'-'+(('0'+(now.getDate()+1)).slice(-2))+"T00:00:00.000Z");
+    const lowerbound = new Date(now.getFullYear()+'-'+(('0'+(now.getMonth()+1)).slice(-2))+'-'+(('0'+(now.getDate())).slice(-2))+"T00:00:00.000Z");
     const upperbound = new Date(-1 + lowerbound.getTime() + 1000*60*60*24);
-
     let ct = 0;
     for (let client of atendimentos){
         if (client.entrou_na_fila_em && client.entrou_na_fila_em >= lowerbound && client.entrou_na_fila_em <= upperbound){

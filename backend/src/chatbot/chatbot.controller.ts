@@ -58,7 +58,7 @@ const sendMessageTo = async (chatbot: Chatbot, chat_id: number, text: string) =>
 
 const queryResult = async (chatbot: Chatbot, query: BotUpdate) => {
   const text = query.message.text;
-  const name = query.message.chat.first_name + query.message.chat.last_name;
+  const name = query.message.chat.first_name + ' ' + query.message.chat.last_name;
   const chat_id = query.message.chat.id;
   if (text.includes('start') || text.includes('Entrar na fila')) {
     const user: Client = {

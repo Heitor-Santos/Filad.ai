@@ -34,7 +34,8 @@ function statusFila(req: Request, res: Response) {
             name: usr.nome,
             age: usr.idade,
             sex: usr.sexo,
-            telegram_id: usr.telegram_id
+            telegram_id: usr.telegram_id,
+            username: usr.username,
         });
     });
 
