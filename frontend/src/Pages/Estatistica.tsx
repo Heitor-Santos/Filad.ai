@@ -45,8 +45,8 @@ function Estatistica() {
     return (
         <>
             {stats ?
-                <div style={{ marginLeft: "2%" }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <div style={{ marginLeft: "2%"}}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between'}}>
                         <h2 id="est-top">
                             Estatísticas
                         </h2>
