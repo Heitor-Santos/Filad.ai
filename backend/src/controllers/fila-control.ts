@@ -83,8 +83,8 @@ function getStatistics(req: Request, res: Response) {
 
         let mp = new Map();
         let totalIncomingUsers = 0;
-        let today = new Date();
-        today.setHours(0, 0, 0);
+        let date_start = new Date(String(start));
+        date_start.setHours(0, 0, 0);
 
         for(let i = 0; i < 12; i++) {
             data.attendances_two_hours.push({hour : i * 2, pacientes: 0});
@@ -104,7 +104,7 @@ function getStatistics(req: Request, res: Response) {
                     data.avg_time += (elem.saiu_da_fila_em.getTime() - elem.entrou_na_fila_em.getTime());
                     data.attendances++;
                 }
-                if(elem.entrou_na_fila_em && elem.entrou_na_fila_em.getTime() >= today.getTime()) {
+                if(elem.entrou_na_fila_em && elem.entrou_na_fila_em.getTime() >= date_start.getTime()) {
                     data.attendances_two_hours[Math.floor(elem.entrou_na_fila_em.getHours() / 2)].pacientes++;
                 }
 
