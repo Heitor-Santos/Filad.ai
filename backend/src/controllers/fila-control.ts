@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { Client, fila } from '../repositories/fila-repo';
-import { atendimentos } from '../repositories/atendimentos-repo';
+import { atendimentos, fetchNumberOfClientsToday} from '../repositories/atendimentos-repo';
 
 function entrarNaFila(user: Client) {
     if (fila.find(client => client.telegram_id == user.telegram_id)) {
@@ -41,7 +41,8 @@ function statusFila(req: Request, res: Response) {
     return res.send({
         fila: queryFila,
         total: queryFila.length,
-        averageWait: calcularPrevisaoEspera(),
+        clientsToday: fetchNumberOfClientsToday(),
+        averageWaitMin: Math.floor(calcularPrevisaoEspera()),
     })
 }
 

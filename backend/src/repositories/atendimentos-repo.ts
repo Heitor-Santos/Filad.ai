@@ -105,6 +105,27 @@ export const atendimentos: Client[] = [
         //     positivo: true,
         //     descricao: "Gostei! Adoro essas modernindades"
         // }
+    },
+    {
+        telegram_id: 10,
+        nome: 'Josefinildson',
+        sexo: 'O',
+        idade: 23,
+        entrou_na_fila_em: new Date("2021/08/11 10:20:30"),
+        saiu_da_fila_em: new Date("2021/08/11 13:23:25"),
     }
 ]
 
+export const fetchNumberOfClientsToday = () => {
+    const now = new Date();
+    const lowerbound = new Date(now.getFullYear()+'-'+(('0'+(now.getMonth()+1)).slice(-2))+'-'+(('0'+(now.getDate()+1)).slice(-2))+"T00:00:00.000Z");
+    const upperbound = new Date(-1 + lowerbound.getTime() + 1000*60*60*24);
+
+    let ct = 0;
+    for (let client of atendimentos){
+        if (client.entrou_na_fila_em && client.entrou_na_fila_em >= lowerbound && client.entrou_na_fila_em <= upperbound){
+            ct++;
+        }
+    }
+    return ct;
+};
