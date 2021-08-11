@@ -20,22 +20,30 @@ import Estatistica from './Pages/Estatistica';
 
 function App() {
   return (
-    <Container>
-      <Box id="head">
-        <img src={logo} alt="logo" width={160} height={57} />
+    <div>
+      <div id="head">
+        <div style={{ marginLeft:'2%', width:'16%', display:'flex', justifyContent:'center' }}>
+          <img src={logo} alt="logo" width={81.85} height={75.95} />
+        </div>
         <Typography variant="h3" gutterBottom>
           Clínica Bem Viver
         </Typography>
-      </Box>
-      <Grid container>
-        <Grid item lg={2} id="side-menu">
+      </div>
+      <div id="painel">
+        <div id="side-menu">
           <div>
-            <a href="/fila"><p><MessageIcon /><Typography>Fila</Typography></p></a>
-            <a href="/historico"><p><HistoryIcon /><Typography>Histórico</Typography></p></a>
-            <a href="/estatistica"><p><ShowChartIcon /><Typography>Estatísticas</Typography></p></a>
+            <div>
+              <a href="/fila"><p style={{ display: 'flex', alignItems: "center" }}><MessageIcon />Fila</p></a>
+            </div>
+            <div>
+              <a href="/historico"><p style={{ display: 'flex', alignItems: "center" }}><HistoryIcon />Histórico</p></a>
+            </div>
+            <div>
+              <a href="/estatistica"><p style={{ display: 'flex', alignItems: "center" }}><ShowChartIcon />Estatísticas</p></a>
+            </div>
           </div>
-        </Grid>
-        <Grid item lg={10}>
+        </div>
+        <div style={{ width: '78%' }}>
           <Router>
             <Switch>
               <Route path="/fila">
@@ -49,9 +57,9 @@ function App() {
               </Route>
             </Switch>
           </Router>
-        </Grid>
-      </Grid>
-    </Container>
+        </div>
+      </div>
+    </div>
   );
 }
 
