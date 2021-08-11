@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { Client } from '../repositories/fila-repo';
 import { entrarNaFila, getPrevisaoUser } from '../controllers/fila-control';
+import { getPropaganda } from '../controllers/propaganda-control';
+var telegram = require('telegram-bot-api');
 
 export interface BotUpdate {
   update_id: number,
@@ -52,7 +54,22 @@ const getUpdates = async (chatbot: Chatbot) => {
 }
 
 const filterTextToQuery = (text: string) => {
+  //return text.replace(/[-ÁÉÍÓÚÀÈÌÒÙÂÊÎÔÛÃẼĨÕŨáéíóúàèìòùâêîôûãõçÇ[/\]{}()*+=!\\^$|#]/g, '\\$&');
   return text.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
+export const sendAdvertisementTo = async (chatbot: Chatbot, chat_id: number) => {
+  var api = new telegram({
+    token: chatbot.token_id
+  })
+
+  const propaganda = getPropaganda(undefined, undefined, undefined);
+
+  api.sendPhoto({
+    chat_id: chat_id,
+    caption: propaganda?.text,
+    photo: propaganda?.imagem
+  })
 }
 
 export const sendMessageTo = async (chatbot: Chatbot, chat_id: number, text: string) => {
@@ -102,13 +119,15 @@ const queryResult = async (chatbot: Chatbot, query: BotUpdate) => {
   if (!text) return;
 
   if (text.includes('start')) {
-    await sendMessageTo(chatbot, chat_id, "Ola, sou o chatbot do Filad.ai e estou aqui para te ajudar! :)\nComandos:\n 'entrar' para entrar na fila.\n'status' para ver sua posicao na fila.\n'quero sair' para desistir de sua espera.");
+    await sendMessageTo(chatbot, chat_id, "Ola, sou o agente conversacional do Filad.ai e estou aqui para te ajudar! :)\nComandos:\n 'entrar' para entrar na fila.\n'status' para ver sua posicao na fila.\n'quero sair' para desistir de sua espera.");
   } else if (text.includes('entrar')) {
     await joinQueue(name, chat_id, username, chatbot);
   } else if (text.includes('status')) {
     await requestStatus(chat_id, chatbot);
   } else if (text.includes('quero sair')) {
     await axios.post('http://localhost:3333/api/fila/sair', { telegram_id: chat_id, desistencia: true });
+  } else if (text.includes('easter-egg')) {
+    sendAdvertisementTo(chatbot, chat_id);
   }
 }
 

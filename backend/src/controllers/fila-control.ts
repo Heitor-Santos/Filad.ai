@@ -2,13 +2,17 @@ import { Request, Response } from 'express';
 import { Client, fila } from '../repositories/fila-repo';
 import { atendimentos, fetchNumberOfClientsToday } from '../repositories/atendimentos-repo';
 import { getChatbot } from '../index';
-import { sendMessageTo, requestStatus } from '../chatbot/chatbot.controller';
+import { sendMessageTo, requestStatus, sendAdvertisementTo } from '../chatbot/chatbot.controller';
 
 function entrarNaFila(user: Client) {
     if (fila.find(client => client.telegram_id == user.telegram_id)) {
         return { error: "user_already_in_queue" };
     }
     fila.push(user);
+
+    //Enviar propaganda em após 5 minutos
+    setTimeout(() => { sendAdvertisementTo(getChatbot(), user.telegram_id) }, 5 * 60 * 1000);
+
     return getPrevisaoUser(user.telegram_id);
 }
 
@@ -26,7 +30,7 @@ function sairDaFila(req: Request, res: Response) {
     if (index == -1) {
         return res.send({ error: "user_not_found" })
     }
-    
+
     let msgText = "";
 
     const firstName = fila[index].nome.split(' ')[0];
