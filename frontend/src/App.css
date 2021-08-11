@@ -12,6 +12,15 @@ p{
 .tipo{
   font-family: 'Montserrat', sans-serif;
 }
+
+#est-top{
+  font-family: 'Montserrat', sans-serif;
+}
+
+#hist-top{
+  font-family: 'Montserrat', sans-serif;
+}
+
 #head{
   background-color: white;
   padding-bottom: 2%;
@@ -33,4 +42,67 @@ p{
   justify-content: center;
   display: flex;
   font-family: 'Montserrat', sans-serif;
+}
+
+#painel-estat-top{
+  display: flex;
+  justify-content: space-between;
+}
+
+#painel-estat-top > div{
+  font-family: 'Montserrat', sans-serif;
+  font-weight: bold;
+  height: inherit;
+  padding-left: 5px;
+  padding-right: 50px;
+  background-color: white;
+  border-radius: 5px;
+  border-style: solid;
+  border-width: 1px;
+}
+
+#painel-estat-top > div > h3{
+  margin: 0%;
+  padding: 0%;
+}
+
+
+#painel-estat-middle{
+  margin-top: 1%;
+  width: 100%;
+  background-color: white;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: bold;
+  border-radius: 5px;
+  border-style: solid;
+  border-width: 1px;
+}
+
+#painel-estat-middle > div{
+  padding-left: 5px;
+}
+
+#painel-estat-middle > div >h3{
+  margin-left: 1%;
+  margin: 0;
+}
+
+#painel-estat-bottom{
+  margin-top: 1%;
+  width: 100%;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+}
+
+#painel-estat-bottom > div{
+  border-radius: 5px;
+  border-style: solid;
+  border-width: 1px;
+  background-color: white;
+  height: 50vh;
+  font-weight: bold;
+  padding-left: 5px;
+  margin-bottom: 50px;
 }
