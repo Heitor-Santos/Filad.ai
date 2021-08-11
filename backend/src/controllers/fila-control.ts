@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import { Client, fila } from '../repositories/fila-repo';
 import { atendimentos, fetchNumberOfClientsToday } from '../repositories/atendimentos-repo';
+import { getChatbot } from '../index';
+import { sendMessageTo, requestStatus } from '../chatbot/chatbot.controller';
 
 function entrarNaFila(user: Client) {
     if (fila.find(client => client.telegram_id == user.telegram_id)) {
@@ -10,19 +12,36 @@ function entrarNaFila(user: Client) {
     return getPrevisaoUser(user.telegram_id);
 }
 
+function sendMessagesStatusToAll(telegram_id: number) {
+    const chatbot = getChatbot();
+    fila.map(client => {
+        if (client.telegram_id == telegram_id) return;
+        requestStatus(telegram_id, chatbot);
+    })
+}
+
 function sairDaFila(req: Request, res: Response) {
-    const index = fila.findIndex(client => client.telegram_id == Number(req.body.telegram_id))
+    const telegram_id = Number(req.body.telegram_id);
+    const index = fila.findIndex(client => client.telegram_id == telegram_id)
     if (index == -1) {
         return res.send({ error: "user_not_found" })
     }
+    
+    let msgText = "";
 
+    const firstName = fila[index].nome.split(' ')[0];
     const user = fila.splice(index, 1)[0];
     if (req.body.desistencia) {
         user.desistencia = true;
+        msgText = `Poxa ${firstName}, que pena que nao pudestes esperar :/`;
     } else {
         user.saiu_da_fila_em = new Date();
+        msgText = `Vimos que você seguiu para atendimento, obrigado por esperar!`;
     }
+
     atendimentos.push(user);
+    sendMessageTo(getChatbot(), telegram_id, msgText);
+    sendMessagesStatusToAll(telegram_id);
     return res.send({ data: user })
 }
 

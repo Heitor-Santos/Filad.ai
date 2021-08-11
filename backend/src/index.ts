@@ -18,7 +18,7 @@ var chatbot: Chatbot = {
     offset: 0
 }
 
-const fetchUpdateDelayInSeconds = 10;
+const fetchUpdateDelayInSeconds = 5;
 setInterval(() => {
     getUpdates(chatbot).then((res) => {
         const offset = res.offset;
@@ -26,6 +26,7 @@ setInterval(() => {
     });
 }, fetchUpdateDelayInSeconds * 1000);
 
+export const getChatbot = () => chatbot;
 
 app.listen(port, () => {
     console.log(`Servidor ouvindo na porta ${port}`)

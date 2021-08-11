@@ -51,8 +51,12 @@ const getUpdates = async (chatbot: Chatbot) => {
   return chatbot;
 }
 
-const sendMessageTo = async (chatbot: Chatbot, chat_id: number, text: string) => {
-  const requestUrl = `https://api.telegram.org/bot${chatbot.token_id}/sendMessage?chat_id=${chat_id}&text=${text}`;
+const filterTextToQuery = (text: string) => {
+  return text.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
+export const sendMessageTo = async (chatbot: Chatbot, chat_id: number, text: string) => {
+  const requestUrl = `https://api.telegram.org/bot${chatbot.token_id}/sendMessage?chat_id=${chat_id}&text=${filterTextToQuery(text)}`;
   return axios.get(requestUrl);
 }
 
@@ -67,11 +71,11 @@ const joinQueue = async (name: string, chat_id: number, username: string, chatbo
   }
   if (username) user.username = username;
   const result: any = entrarNaFila(user);
-  let msg = `Voce entrou na fila. Sua posicao atual e: ${result.posicao} e a previsao de espera e de ${result.previsao} minutos.`;
+  let msg = `Voce entrou na fila. Sua posicao atual é: ${result.posicao} e a previsao de espera e de ${result.previsao} minutos.`;
 
   if (result.error) {
     if (result.error == 'user_already_in_queue')
-      msg = "Esse usuario ja esta na fila.";
+      msg = "Voce ja esta na fila. Para saber mais, mande 'status'.";
     else if (result.error == 'user_not_found')
       msg = "Erro ao entrar na fila. Por favor, tente novamente.";
   }
@@ -79,7 +83,7 @@ const joinQueue = async (name: string, chat_id: number, username: string, chatbo
   const sendMessageResult = await sendMessageTo(chatbot, chat_id, msg);
 }
 
-const requestStatus = async (chat_id: number, chatbot: Chatbot) => {
+export const requestStatus = async (chat_id: number, chatbot: Chatbot) => {
   const result: any = getPrevisaoUser(chat_id);
   let msg = `Sua posicao atual e: ${result.posicao} e a previsao de espera e de ${result.previsao} minutos.`;
   if (result.error) {
@@ -97,10 +101,14 @@ const queryResult = async (chatbot: Chatbot, query: BotUpdate) => {
 
   if (!text) return;
 
-  if (text.includes('start') || text.includes('Entrar na fila')) {
+  if (text.includes('start')) {
+    await sendMessageTo(chatbot, chat_id, "Ola, sou o chatbot do Filad.ai e estou aqui para te ajudar! :)\nComandos:\n 'entrar' para entrar na fila.\n'status' para ver sua posicao na fila.\n'quero sair' para desistir de sua espera.");
+  } else if (text.includes('entrar')) {
     await joinQueue(name, chat_id, username, chatbot);
   } else if (text.includes('status')) {
     await requestStatus(chat_id, chatbot);
+  } else if (text.includes('quero sair')) {
+    await axios.post('http://localhost:3333/api/fila/sair', { telegram_id: chat_id, desistencia: true });
   }
 }
 
