@@ -1,0 +1,41 @@
+.box-superior {
+    width: 100%;
+    min-width: 750px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    font-family: 'Montserrat', sans-serif;
+
+}
+.box-esquerda p {
+    margin: 0;
+}
+.box-esquerda h1 {
+    vertical-align: baseline;
+    margin: 0;
+}
+#white {
+    color: white;
+}
+.box-direita {
+    display: flex;
+    justify-content: space-between;
+}
+
+.box-direita p {
+    margin: 0;
+}
+.clock p{
+    justify-content: center;
+}
+.clock-image {
+    display: inline-block;
+    width: 30px;
+}
+.clock-text {
+    margin: 10px;
+    display: inline-block;
+    vertical-align: top;
+}
+.box-inferior {
+    display: flex;
+}
