@@ -2,32 +2,40 @@ import axios from 'axios';
 import { Client } from '../repositories/fila-repo';
 import { entrarNaFila, getPrevisaoUser } from '../controllers/fila-control';
 import { getPropaganda } from '../controllers/propaganda-control';
-var telegram = require('telegram-bot-api');
 
+interface fromUpdate {
+  id: number,
+  is_bot: boolean,
+  first_name: string,
+  last_name: string,
+  username: string,
+  language_code: string
+}
+interface messageUpdate {
+  message_id: number,
+  from: fromUpdate,
+  chat: {
+    id: number,
+    first_name: string,
+    last_name: string,
+    username: string,
+    type: string
+  },
+  date: number,
+  text: string
+}
 export interface BotUpdate {
   update_id: number,
-  message: {
-    message_id: number,
-    from: {
-      id: number,
-      is_bot: boolean,
-      first_name: string,
-      last_name: string,
-      username: string,
-      language_code: string
-    },
-    chat: {
-      id: number,
-      first_name: string,
-      last_name: string,
-      username: string,
-      type: string
-    },
-    date: number,
-    text: string
+  message: messageUpdate,
+  callback_query?: {
+    id: string,
+    from: fromUpdate,
+    message: messageUpdate,
+    chat_instance: string,
+    data: string
   }
 }
-
+/*
 export interface Chatbot {
   token_id: string,
   offset: number
@@ -129,6 +137,71 @@ const queryResult = async (chatbot: Chatbot, query: BotUpdate) => {
   } else if (text.includes('easter-egg')) {
     sendAdvertisementTo(chatbot, chat_id);
   }
-}
+}*/
 
-export { getUpdates };
+export class ChatBot {
+  botapi: any;
+
+  constructor(token: any) {
+    const TG = require('telegram-bot-api');
+    this.botapi = new TG({ token: token });
+    this.botapi.setMessageProvider(new TG.GetUpdateMessageProvider())
+    this.botapi.start().then(() => {
+      console.log('Telegram API is running')
+    });
+    this.botapi.on('update', this.dealWithUpdate);
+  }
+
+  dealWithUpdate = (update: BotUpdate) => {
+    var chat_id: number = 0;
+    if (update.callback_query) {
+      console.log(update.callback_query);
+      chat_id = update.callback_query!.message.chat.id;
+      this.sendSexoConfirmationMessage(chat_id, update.callback_query!.data);
+    } else {
+      chat_id = update.message.chat.id;
+      this.sendMessageWithQR(chat_id);
+    }
+  }
+
+  sendSexoConfirmationMessage = (chat_id:number, data:string) => {
+    var sexo = 'O';
+    if (data == 'postback_sexo_masculino') sexo = 'M';
+    if (data == 'postback_sexo_feminino') sexo = 'F';
+    this.sendMessageText(chat_id, 'Seu sexo eh *'+sexo+'*',)
+  }
+
+  sendMessageText = (chat_id: number, text: string) => {
+    this.botapi.sendMessage({
+      chat_id: chat_id,
+      text: text,
+      parse_mode: 'Markdown'
+    })
+  }
+
+  sendMessageWithQR = (chat_id: number) => {
+    this.botapi.sendMessage({
+      chat_id: chat_id,
+      text: 'A mensagem *negrito*',
+      parse_mode: 'Markdown',
+      reply_markup: {
+        inline_keyboard: [
+          [
+            {
+              text: 'Masculino',
+              callback_data: 'postback_sexo_masculino'
+            },
+            {
+              text: 'Feminino',
+              callback_data: 'postback_sexo_feminino'
+            },
+            {
+              text: 'Prefiro não informar.',
+              callback_data: 'postback_sexo_outro'
+            }
+          ]
+        ]
+      }
+    })
+  }
+}

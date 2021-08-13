@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import { Client, fila } from '../repositories/fila-repo';
 import { atendimentos, fetchNumberOfClientsToday } from '../repositories/atendimentos-repo';
-import { getChatbot } from '../index';
-import { sendMessageTo, requestStatus, sendAdvertisementTo } from '../chatbot/chatbot.controller';
+//import { getChatbot } from '../index';
+//import { sendMessageTo, requestStatus, sendAdvertisementTo } from '../chatbot/chatbot.controller';
 
 function entrarNaFila(user: Client) {
     if (fila.find(client => client.telegram_id == user.telegram_id)) {
@@ -11,17 +11,17 @@ function entrarNaFila(user: Client) {
     fila.push(user);
 
     //Enviar propaganda em após 5 minutos
-    setTimeout(() => { sendAdvertisementTo(getChatbot(), user.telegram_id) }, 5 * 60 * 1000);
+    //setTimeout(() => { sendAdvertisementTo(getChatbot(), user.telegram_id) }, 5 * 60 * 1000);
 
     return getPrevisaoUser(user.telegram_id);
 }
 
 function sendMessagesStatusToAll(telegram_id: number) {
-    const chatbot = getChatbot();
-    fila.map(client => {
-        if (client.telegram_id == telegram_id) return;
-        requestStatus(telegram_id, chatbot);
-    })
+    // const chatbot = getChatbot();
+    // fila.map(client => {
+    //     if (client.telegram_id == telegram_id) return;
+    //     requestStatus(telegram_id, chatbot);
+    // })
 }
 
 function sairDaFila(req: Request, res: Response) {
@@ -44,7 +44,7 @@ function sairDaFila(req: Request, res: Response) {
     }
 
     atendimentos.push(user);
-    sendMessageTo(getChatbot(), telegram_id, msgText);
+    //sendMessageTo(getChatbot(), telegram_id, msgText);
     sendMessagesStatusToAll(telegram_id);
     return res.send({ data: user })
 }
