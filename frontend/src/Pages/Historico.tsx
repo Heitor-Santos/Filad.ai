@@ -29,7 +29,7 @@ function Histórico() {
     const fetchHistory = async () => {
         const from = '2000-08-09T20:00:00.000Z';
         const to = '2023-08-09T20:00:00.000Z';
-        const res = await axios.get(`http://localhost:3333/api/fila/historico?start=${from}&end=${to}`);
+        const res = await axios.get(`http://localhost:3333/api/atendimento/historico?start=${from}&end=${to}`);
         
         const arr = res.data;
         const rowsTest = [
@@ -90,11 +90,9 @@ function Histórico() {
 
     const handleClickOpen = (newFeedback : any) => {
         if(newFeedback){
-            console.log('bbbbb'+newFeedback)
-            console.log('aaa'+newFeedback.descricao)
-            setFeedback(newFeedback.descricao);
+            setFeedback((newFeedback.positivo ? ':)' : ':(')+'\n'+newFeedback.descricao);
         }
-        else setFeedback("Esse usuário não deu feedback");
+        else setFeedback("Este usuário não deu feedback");
         setOpen(true);
     };
 

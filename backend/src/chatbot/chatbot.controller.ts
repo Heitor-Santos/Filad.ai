@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { Client, findUser, updateUser } from '../repositories/fila-repo';
 import { entrarNaFila, getPrevisaoUser } from '../controllers/fila-control';
+import { updateRecentClientNps } from '../repositories/atendimentos-repo';
 import { getPropaganda } from '../controllers/propaganda-control';
 
 interface fromUpdate {
@@ -155,9 +156,9 @@ export class ChatBot {
   dealWithUpdate = (update: BotUpdate) => {
     var message: messageUpdate = update.callback_query ? update.callback_query!.message : update.message;
     const { chat_id, text, name, username } = this.fetchStuffFromMessageUpdate(message);
-
+    let callback_data = update.callback_query ? update.callback_query.data : '';
     // console.log({ update })
-    console.log({ chat_id, text, name, username });
+    console.log({ chat_id, text, name, username, callback_data });
     const user: Client | undefined = findUser(chat_id);
 
     if (text.includes('start') || text.includes('entrar')) {
@@ -183,6 +184,10 @@ export class ChatBot {
       }
     } else if (user && (text.includes('status') || text.includes('tempo'))) {
       this.requestStatus(chat_id);
+    } else if (!user && callback_data.includes('postback_nps')) {
+      const vote = text.split('_')[2];
+      updateRecentClientNps(chat_id, vote == 'ruim' ? 0 : 1);
+      this.sendMessageText(chat_id, 'Obrigado pelo feedback!');
     } else {
       this.sendMessageText(chat_id, 'Você não está em nenhuma fila. Por favor, entre em contato com o estabelecimento se você acha que isso é um erro.');
     }
@@ -221,7 +226,7 @@ export class ChatBot {
       updateUser(chat_id, { contexto: 'ask_sexo' });
       ret = 'ok';
     }
-    //Enviar propaganda em após 5 minutos
+    //Enviar propaganda em após 5 minutos TODO
     //setTimeout(() => { sendAdvertisementTo(getChatbot(), user.telegram_id) }, 5 * 60 * 1000);
 
     this.sendMessageText(chat_id, msg);
@@ -245,16 +250,13 @@ export class ChatBot {
         keyboard: [
           [
             {
-              text: 'Masculino',
-              callback_data: 'postback_sexo_masculino'
+              text: 'Masculino'
             },
             {
-              text: 'Feminino',
-              callback_data: 'postback_sexo_feminino'
+              text: 'Feminino'
             },
             {
-              text: 'Prefiro não informar.',
-              callback_data: 'postback_sexo_outro'
+              text: 'Prefiro não informar.'
             }
           ]
         ],
@@ -272,5 +274,33 @@ export class ChatBot {
         msg = 'Você não está em nenhuma fila. Envie "start" para entrar.';
     }
     this.sendMessageText(chat_id, msg);
+  }
+
+  requestNps = (chat_id: number, text: string) => {
+    this.botapi.sendMessage({
+      chat_id: chat_id,
+      text: text,
+      parse_mode: 'Markdown',
+      reply_markup: {
+        inline_keyboard: [
+          [
+            {
+              text: 'Ruim',
+              callback_data: `postback_nps_ruim`
+            },
+            {
+              text: 'Ok',
+              callback_data: `postback_nps_ok`
+            },
+            {
+              text: 'Bom',
+              callback_data: `postback_nps_bom`
+            }
+          ]
+        ],
+        "resize_keyboard": true,
+        "one_time_keyboard": true
+      }
+    })
   }
 }

@@ -59,7 +59,7 @@ function FilaGeral() {
             fetchStatus().then((res) => {
                 updateStates(res);
             });
-        }, 15000);
+        }, 1500);
     }
 
     useEffect(initConfig, []);
