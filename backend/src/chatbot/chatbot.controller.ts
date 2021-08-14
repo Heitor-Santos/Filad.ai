@@ -226,8 +226,12 @@ export class ChatBot {
       updateUser(chat_id, { contexto: 'ask_sexo' });
       ret = 'ok';
     }
-    //Enviar propaganda em após 5 minutos TODO
-    //setTimeout(() => { sendAdvertisementTo(getChatbot(), user.telegram_id) }, 5 * 60 * 1000);
+
+    setTimeout(() => {
+      const recentUser = findUser(user.telegram_id);
+      if (!recentUser) return;
+      this.sendAdvertisementTo(recentUser);
+    }, 1 * 60 * 1000);
 
     this.sendMessageText(chat_id, msg);
     return ret;
@@ -301,6 +305,15 @@ export class ChatBot {
         "resize_keyboard": true,
         "one_time_keyboard": true
       }
+    })
+  }
+
+  sendAdvertisementTo = (client: Client) => {
+    const propaganda = getPropaganda(undefined, client.idade, client.sexo);
+    this.botapi.sendPhoto({
+      chat_id: client.telegram_id,
+      caption: propaganda?.text,
+      photo: propaganda?.imagem
     })
   }
 }
