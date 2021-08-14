@@ -156,7 +156,7 @@ export class ChatBot {
     var message: messageUpdate = update.callback_query ? update.callback_query!.message : update.message;
     const { chat_id, text, name, username } = this.fetchStuffFromMessageUpdate(message);
 
-    console.log({ update })
+    // console.log({ update })
     console.log({ chat_id, text, name, username });
     const user: Client | undefined = findUser(chat_id);
 
@@ -166,8 +166,8 @@ export class ChatBot {
         this.sendMessageAskSexo(chat_id);
       }
     } else if (user && user.contexto == 'ask_sexo') {
-      if (['masculino', 'feminino', 'prefiro não informar'].some(t => t == text)) {
-        const idx = ['masculino', 'feminino', 'prefiro não informar'].findIndex(t => t == text);
+      if (['masculino', 'feminino', 'prefiro não informar.'].some(t => t == text)) {
+        const idx = ['masculino', 'feminino', 'prefiro não informar.'].findIndex(t => t == text);
         const sexo = (idx == 0 ? 'M' : (idx == 1 ? 'F' : 'O'));
         updateUser(chat_id, { sexo, contexto: 'ask_idade' });
         this.sendMessageText(chat_id, 'Obrigado pela resposta.\n\nAgora só precisamos da sua idade, por favor, envie apenas os dígitos.');

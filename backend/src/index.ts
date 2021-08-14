@@ -14,6 +14,7 @@ const port = process.env.PORT;
 app.use('/api', routes)
 
 const ChatBotClass = new ChatBot(process.env.CHATBOT_TOKEN);
+export const getChatbot = () => ChatBotClass;
 
 app.listen(port, () => {
     console.log(`Servidor ouvindo na porta ${port}`)

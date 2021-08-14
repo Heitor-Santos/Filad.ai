@@ -18,15 +18,25 @@ export const fila: Client[] = [
 
 ]
 
-export const findUser = (telegram_id: number) => {
+const pushNewClient = (usr: Client) => {
+    fila.push(usr);
+}
+
+const findUser = (telegram_id: number) => {
     return fila.find(client => client.telegram_id == telegram_id);
 }
 
-export const findUserIndex = (telegram_id: number) => {
+const findUserIndex = (telegram_id: number) => {
     return fila.findIndex(client => client.telegram_id == telegram_id);
 }
 
-export const updateUser = (telegram_id: number, body: any) => {
+const removeUser = (telegram_id: number) => {
+    const idx = findUserIndex(telegram_id);
+    if (idx == -1) return;
+    fila.splice(idx, 1);
+}
+
+const updateUser = (telegram_id: number, body: any) => {
     const idx = findUserIndex(telegram_id);
     if (idx == -1) return '404_UserNotFound'
 
@@ -53,3 +63,18 @@ export const updateUser = (telegram_id: number, body: any) => {
 
     return '200_success';
 }
+
+const getClientsAfterUser = (telegram_id: number) => {
+    const ret: number[] = [];
+
+    const idx = findUserIndex(telegram_id);
+    if (idx == -1) return ret;
+
+    for (let i = idx + 1; i < fila.length; i++) {
+        ret.push(fila[i].telegram_id);
+    }
+
+    return ret;
+}
+
+export { pushNewClient, findUser, findUserIndex, removeUser, updateUser, getClientsAfterUser };

@@ -1,37 +1,35 @@
 import { Request, Response } from 'express';
-import { Client, fila, findUser, findUserIndex } from '../repositories/fila-repo';
+import { fila, Client, pushNewClient, findUser, findUserIndex, removeUser, getClientsAfterUser } from '../repositories/fila-repo';
 import { atendimentos, fetchNumberOfClientsToday } from '../repositories/atendimentos-repo';
-//import { getChatbot } from '../index';
-//import { sendMessageTo, requestStatus, sendAdvertisementTo } from '../chatbot/chatbot.controller';
+import { getChatbot } from '../index';
 
-function entrarNaFila(user: Client) {
+const entrarNaFila = (user: Client) => {
     if (findUser(user.telegram_id)) {
         return { error: "user_already_in_queue" };
     }
-    fila.push(user);
+    pushNewClient(user);
 
     return getPrevisaoUser(user.telegram_id);
 }
 
-function sendMessagesStatusToAll(telegram_id: number) {
-    // const chatbot = getChatbot();
-    // fila.map(client => {
-    //     if (client.telegram_id == telegram_id) return;
-    //     requestStatus(telegram_id, chatbot);
-    // })
+const sendMessagesStatusToAll = (arr: number[]) => {
+    const chatbot = getChatbot();
+    arr.forEach((chat_id: number) => {
+        chatbot.requestStatus(chat_id);
+    });
 }
 
-function sairDaFila(req: Request, res: Response) {
+const sairDaFila = (req: Request, res: Response) => {
     const telegram_id = Number(req.body.telegram_id);
-    const index = fila.findIndex(client => client.telegram_id == telegram_id)
-    if (index == -1) {
+    const user: Client | undefined = findUser(telegram_id);
+    if (!user) {
         return res.send({ error: "user_not_found" })
     }
 
     let msgText = "";
+    const firstName = user.nome.split(' ')[0];
 
-    const firstName = fila[index].nome.split(' ')[0];
-    const user = fila.splice(index, 1)[0];
+
     if (req.body.desistencia) {
         user.desistencia = true;
         msgText = `Poxa ${firstName}, que pena que nao pudestes esperar :/`;
@@ -39,14 +37,15 @@ function sairDaFila(req: Request, res: Response) {
         user.saiu_da_fila_em = new Date();
         msgText = `Vimos que você seguiu para atendimento, obrigado por esperar!`;
     }
-
+    const arr = getClientsAfterUser(telegram_id);
+    removeUser(telegram_id);
+    sendMessagesStatusToAll(arr);
+    getChatbot().sendMessageText(telegram_id, msgText);
     atendimentos.push(user);
-    //sendMessageTo(getChatbot(), telegram_id, msgText);
-    sendMessagesStatusToAll(telegram_id);
     return res.send({ data: user })
 }
 
-function statusFila(req: Request, res: Response) {
+const statusFila = (req: Request, res: Response) => {
     const queryFila: any = [];
 
     fila.map(usr => {
@@ -67,7 +66,7 @@ function statusFila(req: Request, res: Response) {
     })
 }
 
-function getPrevisaoUser(telegram_id: number) {
+const getPrevisaoUser = (telegram_id: number) => {
     const index = findUserIndex(telegram_id);
     if (index == -1) {
         return { error: "user_not_found" };
@@ -82,7 +81,7 @@ function getPrevisaoUser(telegram_id: number) {
     };
 }
 
-function calcularPrevisaoEspera() {
+const calcularPrevisaoEspera = () => {
     let total = 0;
 
     atendimentos.forEach(client => {
@@ -97,7 +96,7 @@ function calcularPrevisaoEspera() {
     return Math.floor((total / atendimentos.length) || 0);
 }
 
-function getHistory(req: Request, res: Response) {
+const getHistory = (req: Request, res: Response) => {
     try {
         const { start, end } = req.query;
 
@@ -118,7 +117,7 @@ function getHistory(req: Request, res: Response) {
     }
 }
 
-function getStatistics(req: Request, res: Response) {
+const getStatistics = (req: Request, res: Response) => {
     try {
         const { start, end } = req.query;
 
@@ -180,7 +179,7 @@ function getStatistics(req: Request, res: Response) {
     }
 }
 
-function setFeedback(req: Request, res: Response) {
+const setFeedback = (req: Request, res: Response) => {
     try {
         const { telegram_id, feedback } = req.body;
 
@@ -200,6 +199,7 @@ function setFeedback(req: Request, res: Response) {
 
         atendimentos.forEach((elem, index) => {
             if (elem.telegram_id === telegram_id) {
+                //TODO - FIX
                 fila[index].feedback = { positivo: feedback.positivo, descricao: feedback.descricao };
                 feedbackSaved = true;
             }
