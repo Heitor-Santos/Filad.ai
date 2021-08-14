@@ -181,6 +181,8 @@ export class ChatBot {
       } else {
         this.sendMessageText(chat_id, 'Idade inválida.');
       }
+    } else if (user && (text.includes('status') || text.includes('tempo'))) {
+      this.requestStatus(chat_id);
     } else {
       this.sendMessageText(chat_id, 'Você não está em nenhuma fila. Por favor, entre em contato com o estabelecimento se você acha que isso é um erro.');
     }
@@ -260,5 +262,15 @@ export class ChatBot {
         "one_time_keyboard": true
       }
     })
+  }
+
+  requestStatus = (chat_id: number) => {
+    const result: any = getPrevisaoUser(chat_id);
+    let msg = `Sua posição atual é: ${result.posicao} e a previsão de espera é de ${result.previsao} minutos.`;
+    if (result.error) {
+      if (result.error == 'user_not_found')
+        msg = 'Você não está em nenhuma fila. Envie "start" para entrar.';
+    }
+    this.sendMessageText(chat_id, msg);
   }
 }
