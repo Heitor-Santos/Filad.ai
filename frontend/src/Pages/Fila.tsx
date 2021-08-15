@@ -39,14 +39,14 @@ const DialogConfirmDelete = (props: any) => {
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
         >
-            <DialogTitle id="alert-dialog-title">{"Feedback do usuário"}</DialogTitle>
+            <DialogTitle id="alert-dialog-title">{"Confirmar ação"}</DialogTitle>
             <DialogContent>
                 <DialogContentText id="alert-dialog-description">
-                    Deseja remover {props.user && props.user.nome} da fila?
+                    Tem certeza que deseja marcar {props.user && props.user.nome} como desistência?
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
-                <Button onClick={props.handleRemove} color="primary">
+                <Button onClick={() => { props.handleRemove(); props.handleClose(); }} color="primary">
                     Remover
                 </Button>
                 <Button onClick={props.handleClose} color="primary">
@@ -150,10 +150,11 @@ function FilaGeral() {
         return `${page * rowsPerPage + 1}-${page * rowsPerPage + rowsPerPage} de ${length}`
     }
 
-    const showDialog =(desistencia: boolean, index: number) =>{
+    const showDialog = (desistencia: boolean, index: number, dialog: boolean) => {
         setDesistencia(desistencia);
         setCurrUser(index);
-        setOpenDialog(true);
+        setOpenDialog(dialog);
+        if (!dialog) removeUserFromQueue(filaAtendimento[index].telegram_id, desistencia, index);
     }
 
     return (
@@ -231,8 +232,8 @@ function FilaGeral() {
                                                     })}
                                                     <TableCell>
                                                         {filaAtendimento[idx].username ? <a target='_blank' href={'https://t.me/' + filaAtendimento[idx].username}><img style={{ width: '18px', cursor: 'pointer' }} src={telegram_icon} /></a> : null}
-                                                        <img onClick={() => showDialog(true, idx)} style={{ width: '20px', cursor: 'pointer' }} src={deny_icon} />
-                                                        <img onClick={() => showDialog(false, idx)} style={{ width: '18px', cursor: 'pointer' }} src={accept_icon} />
+                                                        <img onClick={() => showDialog(true, idx, true)} style={{ width: '20px', cursor: 'pointer' }} src={deny_icon} />
+                                                        <img onClick={() => showDialog(false, idx, false)} style={{ width: '18px', cursor: 'pointer' }} src={accept_icon} />
                                                     </TableCell>
                                                 </TableRow>
                                             );
