@@ -31,7 +31,7 @@ function Estatistica() {
     const fetchHistory = async () => {
         const from = '2000-08-09T20:00:00.000Z';
         const to = '2023-08-09T20:00:00.000Z';
-        const res = await axios.get(`http://localhost:3333/api/fila/estatisticas?start=${from}&end=${to}`);
+        const res = await axios.get(`http://localhost:3333/api/atendimento/estatisticas?start=${from}&end=${to}`);
         const arr = res.data;
         setStats(arr)
     }

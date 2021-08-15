@@ -12,13 +12,13 @@ interface Column {
     format?: (value: number) => string;
 }
 
-interface Rows { 
+interface Rows {
     name: string;
     age: number;
     sex: any;
-    bt_feedback:any;
+    bt_feedback: any;
     feedback: any;
-    bt_telegram:any;
+    bt_telegram: any;
     telegram: any;
     visit: any;
 }
@@ -29,14 +29,13 @@ function Histórico() {
     const fetchHistory = async () => {
         const from = '2000-08-09T20:00:00.000Z';
         const to = '2023-08-09T20:00:00.000Z';
-        const res = await axios.get(`http://localhost:3333/api/fila/historico?start=${from}&end=${to}`);
-        
+        const res = await axios.get(`http://localhost:3333/api/atendimento/historico?start=${from}&end=${to}`);
+
         const arr = res.data;
-        const rowsTest = [
-            createRows('Andre Vasconcelos', 21, 'M', 'Botão Feedback', undefined, 'Botão Telegram', undefined, '21/07/2021'),
-        ]
-        for (let client of arr){
-            const data = new Date(client.saiu_da_fila_em).toLocaleDateString();
+        const rowsTest = []
+        for (let client of arr) {
+            let data = new Date(client.entrou_na_fila_em).toLocaleDateString();
+            if (!client.saiu_da_fila_em) data += '\nDesistência';
             console.log(client)
             rowsTest.push(createRows(client.nome, Number(client.idade), client.sexo, 'Botão Feedback', client.feedback, 'Botão Telegram', client.telegram_id, data));
         };
@@ -44,7 +43,7 @@ function Histórico() {
         setRows(rowsTest);
     }
 
-    useEffect(() => {        
+    useEffect(() => {
         fetchHistory();
     }, [])
 
@@ -57,9 +56,9 @@ function Histórico() {
         { id: 'visit', label: 'Data', minWidth: 100, align: 'center' }
     ];
 
-    function createRows(name: string, age: number, sex: string, bt_feedback:any, feedback: any, bt_telegram:any, telegram:any, visit:any): Rows {
+    function createRows(name: string, age: number, sex: string, bt_feedback: any, feedback: any, bt_telegram: any, telegram: any, visit: any): Rows {
         return { name, age, sex, bt_feedback, feedback, bt_telegram, telegram, visit };
-      }
+    }
 
     const useStyles = makeStyles({
         root: {
@@ -76,42 +75,40 @@ function Histórico() {
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
     };
-    
+
     const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
         setRowsPerPage(+event.target.value);
         setPage(0);
     };
 
-    const labelRows = (page: number, rowsPerPage:number, length:number) => {
+    const labelRows = (page: number, rowsPerPage: number, length: number) => {
         return `${page * rowsPerPage + 1}-${page * rowsPerPage + rowsPerPage} de ${length}`
     }
 
     const [open, setOpen] = React.useState(false);
 
-    const handleClickOpen = (newFeedback : any) => {
-        if(newFeedback){
-            console.log('bbbbb'+newFeedback)
-            console.log('aaa'+newFeedback.descricao)
-            setFeedback(newFeedback.descricao);
+    const handleClickOpen = (newFeedback: any) => {
+        if (newFeedback) {
+            setFeedback((newFeedback.positivo ? ':)' : ':(') + '\n' + newFeedback.descricao);
         }
-        else setFeedback("Esse usuário não deu feedback");
+        else setFeedback("Este usuário não deu feedback");
         setOpen(true);
     };
 
     const handleClose = () => {
         setOpen(false);
     };
-    const [feedbackAtual, setFeedback] = useState <string>();
+    const [feedbackAtual, setFeedback] = useState<string>();
     return (
-        <div style ={{marginLeft: "2%"}}>
-            <div style ={{ display: 'flex', justifyContent: 'space-between' }}>
+        <div style={{ marginLeft: "2%" }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <h2 id="hist-top">
                     Histórico
                 </h2>
                 <div style={{ display: 'flex', alignItems: "center" }}>
                     <h2 id="hist-top">Período</h2>
-                    <FormControl style={{ marginLeft: "20px"}}>
-                        <Select 
+                    <FormControl style={{ marginLeft: "20px" }}>
+                        <Select
                             value={periodo}
                             onChange={(e: any) => setPeriodo(e.target.value)}
                             displayEmpty
@@ -124,16 +121,16 @@ function Histórico() {
                         </Select>
                     </FormControl>
                     <Dialog
-                    open={open}
-                    onClose={handleClose}
-                    aria-labelledby="alert-dialog-title"
-                    aria-describedby="alert-dialog-description"
+                        open={open}
+                        onClose={handleClose}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
                     >
-                    <DialogTitle id="alert-dialog-title">{"Feedback do usuário"}</DialogTitle>
+                        <DialogTitle id="alert-dialog-title">{"Feedback do usuário"}</DialogTitle>
                         <DialogContent>
-                        <DialogContentText id="alert-dialog-description">
-                            {feedbackAtual}
-                        </DialogContentText>
+                            <DialogContentText id="alert-dialog-description">
+                                {feedbackAtual}
+                            </DialogContentText>
                         </DialogContent>
                         <DialogActions>
                             <Button onClick={handleClose} color="primary">
@@ -143,7 +140,7 @@ function Histórico() {
                     </Dialog>
                 </div>
             </div>
-            
+
             {/* Tabela */}
             <Paper className={classes.root}>
                 <TableContainer className={classes.container}>
@@ -151,10 +148,10 @@ function Histórico() {
                         <TableHead>
                             <TableRow>
                                 {columns.map((column) => (
-                                    <TableCell 
-                                    key={column.id}
-                                    align={column.align}
-                                    style={{ minWidth: column.minWidth }}
+                                    <TableCell
+                                        key={column.id}
+                                        align={column.align}
+                                        style={{ minWidth: column.minWidth }}
                                     >
                                         {column.label}
                                     </TableCell>
@@ -167,23 +164,23 @@ function Histórico() {
                                     <TableRow hover role="checkbox" tabIndex={-1} key={index}>
                                         {columns.map((column) => {
                                             const value = row[column.id];
-                                            if (value==="Botão Feedback") {
+                                            if (value === "Botão Feedback") {
                                                 return (
                                                     <TableCell key={column.id} align={column.align}>
-                                                            <Button onClick={()=>handleClickOpen(row.feedback)}>
-                                                                <FeedbackIcon />
-                                                            </Button>
+                                                        <Button onClick={() => handleClickOpen(row.feedback)}>
+                                                            <FeedbackIcon />
+                                                        </Button>
                                                     </TableCell>
                                                 )
                                             }
-                                            if (value==="Botão Telegram") {
+                                            if (value === "Botão Telegram") {
                                                 return (
                                                     <TableCell key={column.id} align={column.align}>
-                                                            <Button onClick={()=>alert('Telegram')}>
-                                                                <TelegramIcon />
-                                                                </Button>
-                                                        </TableCell>
-                                                        )
+                                                        <Button onClick={() => alert('Telegram')}>
+                                                            <TelegramIcon />
+                                                        </Button>
+                                                    </TableCell>
+                                                )
                                             }
                                             return (
                                                 <TableCell key={column.id} align={column.align}>
@@ -197,16 +194,16 @@ function Histórico() {
                         </TableBody>
                     </Table>
                 </TableContainer>
-                <TablePagination 
-                labelRowsPerPage='Linhas por página:'
-                labelDisplayedRows={() => labelRows(page, rowsPerPage, rows.length)}
-                rowsPerPageOptions={[10,25,100]}
-                component="div"
-                count={rows.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
+                <TablePagination
+                    labelRowsPerPage='Linhas por página:'
+                    labelDisplayedRows={() => labelRows(page, rowsPerPage, rows.length)}
+                    rowsPerPageOptions={[10, 25, 100]}
+                    component="div"
+                    count={rows.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
                 />
             </Paper>
         </div>
