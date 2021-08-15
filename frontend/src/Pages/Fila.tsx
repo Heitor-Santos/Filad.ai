@@ -42,7 +42,7 @@ const DialogConfirmDelete = (props: any) => {
             <DialogTitle id="alert-dialog-title">{"Feedback do usuário"}</DialogTitle>
             <DialogContent>
                 <DialogContentText id="alert-dialog-description">
-                    Deseja remover {props.user.nome} da fila?
+                    Deseja remover {props.user && props.user.nome} da fila?
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
