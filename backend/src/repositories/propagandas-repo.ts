@@ -21,11 +21,60 @@ export const arrayPropaganda: Propaganda[] = [
         faixa: { from: 16, upto: 80 },
         sexo: { M: false, F: true, O: false }
     },
+
     {
-        estabelecimento: "centauro",
-        text: "Apenas 16-17 anos",
+        estabelecimento: "mcdonalds",
+        text: "Um Big Mac quentinho e com desconto, só mostrar essa conversa para ter um desconto de 5%! ",
+        imagem: "https://imagens.ne10.uol.com.br/veiculos/_midias/png/2021/05/28/806x444/1_sem_titulo-17522300.png",
+        faixa: { from: 16, upto: 50 },
+        sexo: { M: true, F: true, O: true }
+    },
+
+    {
+        estabelecimento: "mcdonalds_svt",
+        text: "Um Mc Colosso geladinho e com desconto, só mostrar essa conversa para ter um desconto de 5%! ",
+        imagem: "https://veja.abril.com.br/wp-content/uploads/2017/08/recife-hr210617015.jpg?quality=70&strip=info&resize=680,453",
+        faixa: { from: 16, upto: 80 },
+        sexo: { M: true, F: true, O: true }
+    },
+
+    {
+        estabelecimento: "riachuelo",
+        text: "Melhor variedade de roupas no recife! Mostre essa conversa e receba 3% de desconto em sua proxima compra",
         imagem: "https://s2.glbimg.com/9TRkV1kNT38wDhER2gR-lMzUInU=/0x0:1192x942/924x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2020/B/z/se0qbyTYWE9HOvJLeMAg/foto-maior-1.jpg",
-        faixa: { from: 16, upto: 17 },
+        faixa: { from: 16, upto: 50 },
+        sexo: { M: true, F: true, O: true }
+    },
+
+    {
+        estabelecimento: "figueiras",
+        text: "tênis e sapatos com até 25% de desconto!",
+        imagem: "https://vejasp.abril.com.br/wp-content/uploads/2020/11/63.png",
+        faixa: { from: 16, upto: 80 },
+        sexo: { M: true, F: false, O: false }
+    },
+
+    {
+        estabelecimento: "figueiras",
+        text: "Saltos e sandálias com até 20% de desconto!",
+        imagem: "https://vejasp.abril.com.br/wp-content/uploads/2020/11/63.png",
+        faixa: { from: 16, upto: 80 },
+        sexo: { M: false, F: true, O: false }
+    },
+
+    {
+        estabelecimento: "nagem",
+        text: "Computadores, periféricos e material de escritório. Aproveite a promoção!",
+        imagem: "https://imagesapt.apontador-assets.com/fit-in/640x480/a3d616184e954ab5a1e37271cd01c1db/nagem-shopping-recife-13487337290468773.jpg",
+        faixa: { from: 25, upto: 50 },
+        sexo: { M: true, F: true, O: true }
+    },
+
+    {
+        estabelecimento: "nagem",
+        text: "Jogos, consoles e computadores. Aproveite a promoção!",
+        imagem: "https://imagesapt.apontador-assets.com/fit-in/640x480/a3d616184e954ab5a1e37271cd01c1db/nagem-shopping-recife-13487337290468773.jpg",
+        faixa: { from: 16, upto: 25 },
         sexo: { M: true, F: true, O: true }
     }
 ]
