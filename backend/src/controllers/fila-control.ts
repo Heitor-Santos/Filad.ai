@@ -56,6 +56,7 @@ const statusFila = (req: Request, res: Response) => {
             sex: usr.sexo,
             telegram_id: usr.telegram_id,
             username: usr.username,
+            phone: usr.phone_number
         });
     });
 
