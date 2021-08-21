@@ -12,6 +12,7 @@ export interface Client {
     };
     desistencia?: boolean;
     contexto?: string;
+    phone_number?: string;
 }
 
 export const fila: Client[] = [
@@ -46,6 +47,7 @@ const updateUser = (telegram_id: number, body: any) => {
     var contexto;
     var sexo;
     var idade;
+    var phone_number;
     for (let key of Object.keys(body)) {
         if (key == 'saiu_da_fila_em') saiu_da_fila_em = body[key];
         if (key == 'feedback') feedback = body[key];
@@ -53,6 +55,7 @@ const updateUser = (telegram_id: number, body: any) => {
         if (key == 'contexto') contexto = body[key];
         if (key == 'sexo') sexo = body[key];
         if (key == 'idade') idade = body[key];
+        if (key == 'phone_number') phone_number = body[key];
     }
     if (saiu_da_fila_em) fila[idx].saiu_da_fila_em = saiu_da_fila_em;
     if (feedback) fila[idx].feedback = feedback;
@@ -60,6 +63,7 @@ const updateUser = (telegram_id: number, body: any) => {
     if (contexto) fila[idx].contexto = contexto;
     if (sexo) fila[idx].sexo = sexo;
     if (idade) fila[idx].idade = idade;
+    if (phone_number) fila[idx].phone_number = phone_number;
 
     return '200_success';
 }

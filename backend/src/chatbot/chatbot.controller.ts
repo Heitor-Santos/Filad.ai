@@ -23,7 +23,12 @@ interface messageUpdate {
     type: string
   },
   date: number,
-  text: string
+  text: string,
+  contact?: {
+    phone_number: string,
+    first_name: string,
+    user_id: number
+  }
 }
 export interface BotUpdate {
   update_id: number,
@@ -38,24 +43,44 @@ export interface BotUpdate {
 }
 export class ChatBot {
   botapi: any;
+  offset: number;
 
   constructor(token: any) {
     const TG = require('telegram-bot-api');
     this.botapi = new TG({ token: token });
+    this.offset = 0;
+    /*
     this.botapi.setMessageProvider(new TG.GetUpdateMessageProvider())
     this.botapi.start().then(() => {
       console.log('Telegram API is running')
     });
     this.botapi.on('update', this.dealWithUpdate);
+    */
+    const fetchUpdateDelayInSeconds = 5;
+    setInterval(() => {
+      this.getUpdates();
+    }, fetchUpdateDelayInSeconds * 1000);
+  }
+
+  getUpdates = () => {
+    const URL = `https://api.telegram.org/bot${process.env.CHATBOT_TOKEN}/getUpdates?offset=${this.offset}`;
+    axios.get(URL).then((res) => {
+      const data = res.data;
+      if (data.result && data.result.length > 0) {
+        for (let update of data.result) {
+          this.offset = update.update_id + 1;
+          this.dealWithUpdate(update);
+        }
+      }
+    })
   }
 
   dealWithUpdate = (update: BotUpdate) => {
     var message: messageUpdate = update.callback_query ? update.callback_query!.message : update.message;
-    const { chat_id, text, name, username } = this.fetchStuffFromMessageUpdate(message);
+    const { chat_id, text, name, username, contact } = this.fetchStuffFromMessageUpdate(message);
     let callback_data = update.callback_query ? update.callback_query.data : '';
-    // console.log({ update })
-    console.log({ chat_id, text, name, username, callback_data });
     const user: Client | undefined = findUser(chat_id);
+    console.log({ chat_id, text, name, username, callback_data, context: user?.contexto, contact });
 
     if (text.includes('start') || text.includes('entrar')) {
       const result = this.joinQueue(name, chat_id, username);
@@ -73,10 +98,17 @@ export class ChatBot {
       const rgx = /^[0-9]{1,2}$/g;
       if (text.match(rgx)) {
         const idade = Number(text);
-        updateUser(chat_id, { idade, contexto: 'waiting' });
-        this.sendMessageText(chat_id, 'Muito obrigado. Isto é tudo.\nPode ficar tranquilo que estarei aqui te atualizando sempre que houver mudanças na fila. :)');
+        updateUser(chat_id, { idade, contexto: 'ask_phone' });
+        this.sendPhoneRequest(chat_id);
       } else {
         this.sendMessageText(chat_id, 'Idade inválida.');
+      }
+    } else if (user && user.contexto == 'ask_phone') {
+      if (contact) {
+        this.sendMessageText(chat_id, 'Muito obrigado. Isto é tudo.\nPode ficar tranquilo que estarei aqui te atualizando sempre que houver mudanças na fila. :)');
+        updateUser(chat_id, { contexto: 'waiting', phone_number: contact.phone_number });
+      } else {
+        this.sendPhoneRequest(chat_id, 'Por favor, envie-nos seu contato.');
       }
     } else if (user && (text.includes('status') || text.includes('tempo'))) {
       this.requestStatus(chat_id);
@@ -84,18 +116,21 @@ export class ChatBot {
       const vote = text.split('_')[2];
       updateRecentClientNps(chat_id, vote == 'ruim' ? 0 : 1);
       this.sendMessageText(chat_id, 'Obrigado pelo feedback!');
-    } else {
+    } else if (!user) {
       this.sendMessageText(chat_id, 'Você não está em nenhuma fila. Por favor, entre em contato com o estabelecimento se você acha que isso é um erro.');
+    } else {
+      this.sendMessageText(chat_id, 'Não entendi.');
     }
 
   }
 
   fetchStuffFromMessageUpdate = (message: messageUpdate) => {
     const chat_id = message.chat.id;
-    const text = message.text.toLowerCase();
+    const text = message.text?.toLowerCase() || '';
     const name = message.chat.first_name + (message.chat.last_name ? ' ' + message.chat.last_name : '');
     const username = message.chat.username;
-    return { chat_id, text, name, username };
+    const contact = message.contact;
+    return { chat_id, text, name, username, contact };
   }
 
   joinQueue = (name: string, chat_id: number, username: string) => {
@@ -126,7 +161,8 @@ export class ChatBot {
     setTimeout(() => {
       const recentUser = findUser(user.telegram_id);
       if (!recentUser) return;
-      this.sendAdvertisementTo(recentUser);
+      if (recentUser.contexto == 'waiting')
+        this.sendAdvertisementTo(recentUser);
     }, 1 * 60 * 1000);
 
     this.sendMessageText(chat_id, msg);
@@ -195,6 +231,27 @@ export class ChatBot {
             {
               text: 'Bom',
               callback_data: `postback_nps_bom`
+            }
+          ]
+        ],
+        "resize_keyboard": true,
+        "one_time_keyboard": true
+      }
+    })
+  }
+
+  sendPhoneRequest = (chat_id: number, text?: string) => {
+    this.botapi.sendMessage({
+      chat_id: chat_id,
+      text: text || 'Para melhor atendê-lo, precisamos de seu número de contato. Para continuar, é preciso aceitar.',
+      parse_mode: 'Markdown',
+      reply_markup: {
+        keyboard: [
+          [
+            {
+              text: 'Aceitar',
+              callback_data: 'trigger',
+              request_contact: true
             }
           ]
         ],
