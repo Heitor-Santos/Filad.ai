@@ -25,6 +25,7 @@ interface User {
     sexo: any;
     telegram_id: any;
     username: any;
+    phone: any;
 }
 
 const telegram_icon = 'data:image/png;base64,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';
@@ -71,7 +72,7 @@ function FilaGeral() {
             clients: res.data.clientsToday || 0,
             wait: res.data.averageWaitMin || 0,
             fila: res.data.fila.map((user: any) => {
-                return createUser(user.name, user.age, user.sex, user.telegram_id, user.username);
+                return createUser(user.name, user.age, user.sex, user.telegram_id, user.username, user.phone);
             })
         };
     };
@@ -107,7 +108,7 @@ function FilaGeral() {
     }
 
     interface Column {
-        id: 'nome' | 'idade' | 'sexo';
+        id: 'nome' | 'idade' | 'sexo' | 'phone';
         label: string;
         minWidth?: number;
         align?: 'right' | 'center';
@@ -115,13 +116,18 @@ function FilaGeral() {
     }
 
     const columns: Column[] = [
-        { id: 'nome', label: 'Nome', minWidth: 130 },
-        { id: 'idade', label: 'Idade', minWidth: 60, align: 'center' },
-        { id: 'sexo', label: 'Sexo', minWidth: 60, align: 'center' }
+        { id: 'nome', label: 'Nome', minWidth: 80 },
+        { id: 'phone', label: 'Número', minWidth: 50, align: 'center' },
+        { id: 'idade', label: 'Idade', minWidth: 50, align: 'center' },
+        { id: 'sexo', label: 'Sexo', minWidth: 50, align: 'center' }
     ];
 
-    function createUser(nome: any, idade: any, sexo: any, telegram_id: any, username: any): User {
-        return { nome, idade, sexo, telegram_id, username };
+    function createUser(nome: any, idade: any, sexo: any, telegram_id: any, username: any, phone: any): User {
+        var identedphone = phone;
+        if (identedphone && identedphone.length > 0){
+            identedphone = `+${phone.substring(0,2)} (${phone.substring(2,4)}) ${phone.substring(4)}`
+        }
+        return { nome, idade, sexo, telegram_id, username, phone: identedphone };
     }
 
     const useStyles = makeStyles({
