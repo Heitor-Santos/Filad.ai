@@ -113,8 +113,13 @@ export class ChatBot {
     } else if (user && (text.includes('status') || text.includes('tempo'))) {
       this.requestStatus(chat_id);
     } else if (!user && callback_data.includes('postback_nps')) {
-      const vote = text.split('_')[2];
-      updateRecentClientNps(chat_id, vote == 'ruim' ? 0 : 1);
+      const isBadFeedback = callback_data.includes("ruim");
+
+      let voto = "Bom";
+      if (isBadFeedback) voto = "Ruim";
+      else if (callback_data.includes("ok")) voto = "Ok"
+
+      updateRecentClientNps(chat_id, isBadFeedback ? 0 : 1, voto);
       this.sendMessageText(chat_id, 'Obrigado pelo feedback!');
     } else if (!user) {
       this.sendMessageText(chat_id, 'Você não está em nenhuma fila. Por favor, entre em contato com o estabelecimento se você acha que isso é um erro.');

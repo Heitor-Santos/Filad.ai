@@ -17,14 +17,15 @@ export const fetchNumberOfClientsToday = () => {
     return ct;
 };
 
-export const updateRecentClientNps = (telegram_id: number, nps: number) => {
+export const updateRecentClientNps = (telegram_id: number, nps: number, nota: string) => {
     const size = atendimentos.length;
 
     for (let i = size - 1; i >= 0; i--) {
         if (telegram_id == atendimentos[i].telegram_id) {
             atendimentos[i].feedback = {
                 positivo: nps !== 0,
-                descricao: ""
+                descricao: "",
+                detalhe: nota
             };
             return;
         }

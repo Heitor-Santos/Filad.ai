@@ -9,6 +9,7 @@ export interface Client {
     feedback?: {
         positivo: boolean;
         descricao: string;
+        detalhe: string;
     };
     desistencia?: boolean;
     contexto?: string;
