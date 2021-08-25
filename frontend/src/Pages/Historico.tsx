@@ -131,12 +131,12 @@ function Histórico() {
                         <DialogTitle id="alert-dialog-title">{"Feedback do usuário"}</DialogTitle>
                         <DialogContent>
                             <DialogContentText id="alert-dialog-description">
-                                    {feedbackAtual.map(paragraph => 
-                                        <div key={paragraph}>
-                                            <p>{paragraph}</p>
-                                        </div>
-                                        
-                                    )}
+                                {feedbackAtual.map(paragraph =>
+                                    <div key={paragraph}>
+                                        <p>{paragraph}</p>
+                                    </div>
+
+                                )}
                             </DialogContentText>
                         </DialogContent>
                         <DialogActions>
@@ -183,7 +183,11 @@ function Histórico() {
                                             if (value === "Botão Telegram") {
                                                 return (
                                                     <TableCell key={column.id} align={column.align}>
-                                                        <a target='_blank' href={'https://t.me/' + row.username }><img style={{ width: '18px', cursor: 'pointer' }} src={telegram_icon} /></a>
+                                                        {row.username ?
+                                                            <a target='_blank' href={'https://t.me/' + row.username}><img style={{ width: '18px', cursor: 'pointer' }} src={telegram_icon} /></a>
+                                                            :
+                                                            <p>-</p>
+                                                        }
                                                     </TableCell>
                                                 )
                                             }

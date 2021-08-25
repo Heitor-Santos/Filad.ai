@@ -29,7 +29,7 @@ function App() {
           </a>
         </div>
         <Typography variant="h3" gutterBottom>
-          Bem Vinda Comedoria
+          
         </Typography>
       </div>
       <div id="painel">
