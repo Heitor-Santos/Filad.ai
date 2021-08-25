@@ -41,6 +41,10 @@ export interface BotUpdate {
     data: string
   }
 }
+
+function sleep(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 export class ChatBot {
   botapi: any;
   offset: number;
@@ -56,15 +60,20 @@ export class ChatBot {
     });
     this.botapi.on('update', this.dealWithUpdate);
     */
-    const fetchUpdateDelayInSeconds = 5;
-    setInterval(() => {
-      this.getUpdates();
-    }, fetchUpdateDelayInSeconds * 1000);
+
+    setTimeout(async () => {
+      while (true) {
+        try {
+          await this.getUpdates();
+        } catch (e) { }
+        await sleep(500);
+      }
+    }, 1500);
   }
 
-  getUpdates = () => {
+  getUpdates = async () => {
     const URL = `https://api.telegram.org/bot${process.env.CHATBOT_TOKEN}/getUpdates?offset=${this.offset}`;
-    axios.get(URL).then((res) => {
+    await axios.get(URL).then((res) => {
       const data = res.data;
       if (data.result && data.result.length > 0) {
         for (let update of data.result) {

@@ -86,17 +86,19 @@ const getPrevisaoUser = (telegram_id: number) => {
 
 const calcularPrevisaoEspera = () => {
     let total = 0;
+    let ppl = 0;
 
     atendimentos.forEach(client => {
         if (client.desistencia) return;
         if (client.entrou_na_fila_em && client.saiu_da_fila_em) {
             total -= client.entrou_na_fila_em.getTime();
             total += client.saiu_da_fila_em.getTime();
+            ppl += 1;
         }
     });
 
     total /= 1000 * 60; // ms => minutes
-    return Math.floor((total / atendimentos.length) || 0);
+    return Math.floor((total / ppl) || 0);
 }
 
 export { entrarNaFila, sairDaFila, getPrevisaoUser, statusFila, calcularPrevisaoEspera }
