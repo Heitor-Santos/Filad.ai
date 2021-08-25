@@ -2,7 +2,8 @@ import React from 'react';
 import {
   BrowserRouter as Router,
   Switch,
-  Route
+  Route,
+  Link
 } from "react-router-dom";
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
@@ -23,10 +24,12 @@ function App() {
     <div>
       <div id="head">
         <div style={{ marginLeft:'2%', width:'16%', display:'flex', justifyContent:'center' }}>
-          <img src={logo} alt="logo" width={81.85} height={75.95} />
+          <a href="/">
+           <img src={logo} alt="logo" width={200.00} height={75.95}/>
+          </a>
         </div>
         <Typography variant="h3" gutterBottom>
-          Clínica Bem Viver
+          Bem Vinda Comedoria
         </Typography>
       </div>
       <div id="painel">

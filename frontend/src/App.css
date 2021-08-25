@@ -37,6 +37,7 @@ p{
 }
 
 #side-menu{
+  min-height: 80vh;
   overflow:auto;
   width: 16%;
   border-radius: 5px;
@@ -57,6 +58,11 @@ p{
   justify-content: space-between;
 }
 
+#alert-dialog-description {
+  display: flex;
+  flex-direction: column;
+}
+
 #painel-estat-top > div{
   font-family: 'Montserrat', sans-serif;
   font-weight: bold;
@@ -65,7 +71,6 @@ p{
   padding-right: 50px;
   background-color: white;
   border-radius: 5px;
-  border-style: solid;
   border-width: 1px;
 }
 
@@ -82,7 +87,6 @@ p{
   font-family: 'Montserrat', sans-serif;
   font-weight: bold;
   border-radius: 5px;
-  border-style: solid;
   border-width: 1px;
 }
 
@@ -106,7 +110,6 @@ p{
 
 #painel-estat-bottom > div{
   border-radius: 5px;
-  border-style: solid;
   border-width: 1px;
   background-color: white;
   height: 50vh;
