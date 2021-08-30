@@ -24,7 +24,7 @@ export const arrayPropaganda: Propaganda[] = [
 
     {
         estabelecimento: "mcdonalds",
-        text: "Um Big Mac quentinho e com desconto, só mostrar essa conversa para ter um desconto de 5%! ",
+        text: "Um Big Mac quentinho, só mostrar essa conversa para aproveitar a promoção!",
         imagem: "https://i.imgur.com/0wiczjz.png",
         faixa: { from: 16, upto: 50 },
         sexo: { M: true, F: true, O: true }

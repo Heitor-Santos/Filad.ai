@@ -174,9 +174,10 @@ export class ChatBot {
 
     setTimeout(() => {
       const recentUser = findUser(user.telegram_id);
-      if (!recentUser) return;
-      if (recentUser.contexto == 'waiting')
+      console.log("Msg to " + recentUser?.nome)
+      if (recentUser && recentUser.contexto == 'waiting')
         this.sendAdvertisementTo(recentUser);
+      else console.log("Ad not send")
     }, 1 * 60 * 1000);
 
     this.sendMessageText(chat_id, msg);
